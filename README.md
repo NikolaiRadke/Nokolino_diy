@@ -1,2 +1,2 @@
 # NOKOlino
-The ATTiny-bases litte brother of NOKO. Coming soon. Stay tuned.
+The ATTiny-based litte brother of NOKO. Coming soon. Stay tuned.
