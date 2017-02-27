@@ -7,6 +7,8 @@
  * notice you can do whatever you want with this stuff. If we meet
  * some day, and you think this stuff is worth it, you can buy me a
  * beer in return.
+ * 
+ * Nikolai Radke: fixed FLASHSIZE to full 2 MBytes
  */
 
 #include <stdint.h>
@@ -24,7 +26,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#define FLASHSIZE 0x200000 /* 2MiB   */
+#define FLASHSIZE 0x2097152 /* 2MiB   */
 #define BASE       0x40000 /* 256kiB */
 #define MAXSIZE (FLASHSIZE - BASE)
 

@@ -1,14 +1,14 @@
-/* NOKOlino V1.0 12.02.2017 - Nikolai Radke
+/* NOKOlino V1.0 26.02.2017 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correct.
  *  
- *  Flash-Usage: 3.438 (1.8.1 | ATTiny 1.0.2 | Linux X86_64)
+ *  Flash-Usage: 3.846 (1.8.1 | ATTiny 1.0.2 | Linux X86_64)
  *  
  *  Circuit:
  *  1: RST | PB5  free
- *  2: A3  | PB3  Battery VCC             
+ *  2: A3  | PB3  free          
  *  3: A2  | PB4  Busy JQ6500 - 8
  *  4: GND        GND
  *  5: D0  | PB0  TX JQ6500   - 10  (unused)
@@ -31,18 +31,17 @@
 #define Volume  30        // Volume 0-30
 
 // Optional - comment out to disable
-#define Batterywarning    // Nokolino gives a warning whenn battery is low
+#define Batterywarning    // Nokolino gives a warning when battery is low
 //-------------------------------------------------------------------------
 
 // Optional battery warning
-#define minV    3.30 // Minimal voltage bevor battery fails
-
-#define Offset  0.10 // Voltage messuring error
-#define minCurrent (1023/5)*(minV+Offset)
+#define minCurrent   3.50 +Offset // Low power warning current
+#define battLow      3.30 +Offset // Minimal voltage before JQ6500 fails
+#define Offset       0.4          // Measuring error
 
 // Hardware pins
-#define MP3TX   0
-#define MP3RX   1
+#define TX      0
+#define RX      1
 #define Busy    2
 #define Batt    3
 
@@ -59,13 +58,15 @@
 // Variables
 uint16_t seed;
 volatile boolean f_wdt = 1;
+boolean low=false;
 
-JQ6500_Serial mp3(MP3TX,MP3RX); // TX: D0, RX: D1
+JQ6500_Serial mp3(TX,RX); // TX to D0, RX to D1
 
 int main(void) {
 
 #ifdef Batterywarning
   uint16_t current;
+  double vref;
   uint16_t counter=0;
 #endif
 
@@ -76,7 +77,7 @@ init();
   ACSR |= _BV(ACD);  // Disable analog comparator
   DDRB &= ~(1<<PB2); // D2 INPUT
   PORTB |= (1<<PB2); // D2 HIGH 
-
+  
   // Start JQ6500
   mp3.begin(9600);
   mp3.reset();
@@ -99,22 +100,24 @@ while(1)
 {
   // Wait for button/time and go to sleep - ~8 times/second
   attiny_sleep(); // Sleep 128ms         
-  if (!(PINB & (1<<PB2))) JQ6500_play(random(0,21));      // Button event
-  if (random(0,Time*60*8)==1) JQ6500_play(random(21,69)); // Time event
-
+  if (!low)
+  {
+    if (!(PINB & (1<<PB2))) JQ6500_play(random(0,21));      // Button event
+    if (random(0,Time*60*8)==1) JQ6500_play(random(21,69)); // Time event
+  }
+  
   // Check current, if defined
   #ifdef Batterywarning
   if (counter==50*8) // Every minute, 50x 128ms + some sleeping ms
   {
-    current=analogRead(Batt); // Calculate power level from 5 measurements
-    for (uint8_t help=4;help>0;help--)
+    current=MeasureVCC();
+    vref=1024*1.1f/(double)current;
+    if (vref<=minCurrent)     // current below minimum
     {
-     setup_watchdog(0);
-     attiny_sleep();  // Sleep 16ms
-     setup_watchdog(3);
-     current+=analogRead(Batt);
+      if (vref<=battLow) low=true;  // power to low for JQ6500
+      else JQ6500_play(70);    // NOKOLINO says "Beep"
     }
-    if ((current/5)<=minCurrent) JQ6500_play(70);  // NOKOLINO says "Beep"
+    else low=false;
     counter=0;
   }
   counter++;
@@ -128,7 +131,7 @@ void JQ6500_play(uint8_t v) // Plays MP3 number v
   setup_watchdog(8);           // Sleep 4sec - let NOKOlino finish his file
   attiny_sleep();
   setup_watchdog(3);
-  mp3.sleep();                 // Go bach to sleep, JQ6500!
+  mp3.sleep();                 // Go back to sleep, JQ6500!
 }
 
 void attiny_sleep() // Sleep to save power
@@ -153,8 +156,21 @@ void setup_watchdog(uint8_t mode) // Setup wake time
   WDTCR |= _BV(WDIE);
 }
 
+uint16_t MeasureVCC(void) // Thank you, Tim!
+{
+    PRR    &=~_BV(PRADC); 
+    ADCSRA  =_BV(ADEN)|_BV(ADPS2)|_BV(ADPS1)|_BV(ADPS0); 
+    ADMUX   =_BV(REFS2) | 0x0c; 
+    _delay_ms(1);  
+    ADCSRA  |=_BV(ADSC);
+    while (!(ADCSRA&_BV(ADIF))); 
+    ADCSRA  |=_BV(ADIF);
+    return ADC;
+}
+
 ISR(WDT_vect) // Set global flag
 {
   f_wdt=1; 
 }
+
 
