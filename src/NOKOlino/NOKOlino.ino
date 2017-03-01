@@ -14,7 +14,7 @@
  *  5: D0  | PB0  TX JQ6500   - 10  (unused)
  *  6: D1  | PB1  RX JQ6500   - 9   (1kOhm)
  *  7: D2  | PB2  Button      - GND
- *  8: 5V         5V
+ *  8: VCC        VCC
  *  
  *  Sleepmodes:
  *  0=16ms, 1=32ms, 2=64ms, 3=128ms, 4=250ms, 5=500ms
@@ -108,14 +108,14 @@ while(1)
   
   // Check current, if defined
   #ifdef Batterywarning
-  if (counter==50*8) // Every minute, 50x 128ms + some sleeping ms
+  if (counter==50*8)                // Every minute, 50x 128ms + some sleeping ms
   {
     current=MeasureVCC();
     vref=1024*1.1f/(double)current;
-    if (vref<=minCurrent)     // current below minimum
+    if (vref<=minCurrent)           // current below minimum
     {
       if (vref<=battLow) low=true;  // power to low for JQ6500
-      else JQ6500_play(70);    // NOKOLINO says "Beep"
+      else JQ6500_play(70);         // NOKOLINO says "Beep"
     }
     else low=false;
     counter=0;
