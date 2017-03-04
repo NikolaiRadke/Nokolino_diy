@@ -1,10 +1,10 @@
-/* NOKOlino V1.0 26.02.2017 - Nikolai Radke
+/* NOKOlino V1.0 04.03.2017 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correct.
  *  
- *  Flash-Usage: 3.846 (1.8.1 | ATTiny 1.0.2 | Linux X86_64)
+ *  Flash-Usage: 3.838 (1.8.1 | ATTiny 1.0.2 | Linux X86_64)
  *  
  *  Circuit:
  *  1: RST | PB5  free
@@ -31,7 +31,7 @@
 #define Volume  30        // Volume 0-30
 
 // Optional - comment out to disable
-#define Batterywarning    // Nokolino gives a warning when battery is low
+#define Batterywarning    // NOKOlino gives a warning when battery is low
 //-------------------------------------------------------------------------
 
 // Optional battery warning
@@ -57,17 +57,17 @@
 
 // Variables
 uint16_t seed;
-volatile boolean f_wdt = 1;
+volatile boolean f_wdt = 1; // Volatile -> it is an interrupt routine
 boolean low=false;
 
-JQ6500_Serial mp3(TX,RX); // TX to D0, RX to D1
+JQ6500_Serial mp3(TX,RX);   // TX to D0, RX to D1
 
 int main(void) {
 
 #ifdef Batterywarning
   uint16_t current;
   double vref;
-  uint16_t counter=0;
+  uint16_t counter=2;       // Check shortly after startup
 #endif
 
 init(); 
@@ -81,11 +81,11 @@ init();
   // Start JQ6500
   mp3.begin(9600);
   mp3.reset();
-  setup_watchdog(5); // Sleep 500ms
+  setup_watchdog(5);           // Sleep 500ms
   attiny_sleep();
-  mp3.setVolume(Volume); // Max. volume
+  mp3.setVolume(Volume);       // Max. volume
   mp3.setLoopMode(MP3_LOOP_NONE);
-  setup_watchdog(3); // Sleep 128ms
+  setup_watchdog(3);           // Sleep 128ms
   attiny_sleep();
   mp3.sleep();
 
@@ -108,19 +108,19 @@ while(1)
   
   // Check current, if defined
   #ifdef Batterywarning
-  if (counter==50*8)                // Every minute, 50x 128ms + some sleeping ms
+  if (counter==0)                
   {
     current=MeasureVCC();
     vref=1024*1.1f/(double)current;
-    if (vref<=minCurrent)           // current below minimum
+    if (vref<=minCurrent)           // Current below minimum
     {
-      if (vref<=battLow) low=true;  // power to low for JQ6500
+      if (vref<=battLow) low=true;  // Power to low for JQ6500
       else JQ6500_play(70);         // NOKOLINO says "Beep"
     }
     else low=false;
-    counter=0;
+    counter=400;                    // Every minute, 50x 128ms + some sleeping ms
   }
-  counter++;
+  counter--;
   #endif
 }}
 
