@@ -1,10 +1,10 @@
-/* NOKOlino V1.0 04.03.2017 - Nikolai Radke
+/* NOKOlino V1.0 05.03.2017 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correct.
  *  
- *  Flash-Usage: 3.838 (1.8.1 | ATTiny 1.0.2 | Linux X86_64)
+ *  Flash-Usage: 3.620 (1.8.1 | ATTiny 1.0.2 | Linux X86_64)
  *  
  *  Circuit:
  *  1: RST | PB5  free
@@ -21,23 +21,23 @@
  *  6=1sec, 7=2sec, 8=4sec, 9=8sec
  */
 
-#include "JQ6500_Serial.h"
 #include <avr/sleep.h>
 #include <avr/interrupt.h>
+#include <SoftwareSerial.h>
 
 //-------------------------------------------------------------------------
 // Configuation
-#define Time    10        // Say something every statistical 10 minutes
-#define Volume  30        // Volume 0-30
+#define Time    10                  // Say something every statistical 10 minutes
+#define Volume  30                  // Volume 0-30
 
-// Optional - comment out to disable
-#define Batterywarning    // NOKOlino gives a warning when battery is low
+// Optional - comment out with // to disable
+#define Batterywarning              // NOKOlino gives a warning when battery is low
 //-------------------------------------------------------------------------
 
 // Optional battery warning
-#define minCurrent   3.50 +Offset // Low power warning current
-#define battLow      3.30 +Offset // Minimal voltage before JQ6500 fails
-#define Offset       0.4          // Measuring error
+#define minCurrent   3.50 +Offset   // Low power warning current + Measuring error
+#define battLow      3.30 +Offset   // Minimal voltage before JQ6500 fails
+#define Offset       0.6            // Measuring error | Breadboard: 0.4, PCB: 0.6
 
 // Hardware pins
 #define TX      0
@@ -52,55 +52,58 @@
 #ifndef sbi
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
-#define BODS 7  // BOD sleep bit in MCUCR
-#define BODSE 2 // BOD sleep enable bit in MCUCR
+#define BODS 7                       // BOD sleep bit in MCUCR
+#define BODSE 2                      // BOD sleep enable bit in MCUCR
 
 // Variables
 uint16_t seed;
-volatile boolean f_wdt = 1; // Volatile -> it is an interrupt routine
+volatile boolean f_wdt = 1;          // Volatile -> it is an interrupt routine
 boolean low=false;
 
-JQ6500_Serial mp3(TX,RX);   // TX to D0, RX to D1
+SoftwareSerial mp3(TX,RX);           // TX to D0, RX to D1
 
 int main(void) {
 
 #ifdef Batterywarning
   uint16_t current;
   double vref;
-  uint16_t counter=2;       // Check shortly after startup
+  uint16_t counter=10;               // Check shortly after startup
 #endif
 
 init(); 
 {
   // Power saving
-  MCUCR |= _BV(BODS) | _BV(BODSE); // Disable brown out detection
-  ACSR |= _BV(ACD);  // Disable analog comparator
-  DDRB &= ~(1<<PB2); // D2 INPUT
+  MCUCR |= _BV(BODS) | _BV(BODSE);   // Disable brown out detection
+  ACSR |= _BV(ACD);                  // Disable analog comparator
+  DDRB &= ~(1<<PB2);                 // D2 INPUT
   PORTB |= (1<<PB2); // D2 HIGH 
   
   // Start JQ6500
   mp3.begin(9600);
-  mp3.reset();
-  setup_watchdog(5);           // Sleep 500ms
-  attiny_sleep();
-  mp3.setVolume(Volume);       // Max. volume
-  mp3.setLoopMode(MP3_LOOP_NONE);
-  setup_watchdog(3);           // Sleep 128ms
-  attiny_sleep();
-  mp3.sleep();
+  mp3.write("\x7E\x02\x0C\xEF");     // Reset JQ6500
+  setup_watchdog(5);                 // Sleep 500ms
+  attiny_sleep();                 
+  mp3.write("\x7E\x03\x06");
+  mp3.write(Volume);                 // Set volume
+  mp3.write("\xEF"); 
+  setup_watchdog(3);
+  attiny_sleep();                    // Sleep 128ms
+  mp3.write("\x7E\x03\x11\x04\xEF"); // No loop
+  attiny_sleep();                    // Sleep 128ms
+  mp3.write("\x7E\x02\x0A\xEF");     // Sleep, JQ6500!
 
   // Randomize number generator
-  seed=eeprom_read_word(0);    // Read seed
+  seed=eeprom_read_word(0);          // Read seed
   randomSeed(seed);
-  eeprom_write_word(0,seed+1); // Save new seed for next startup
+  eeprom_write_word(0,seed+1);       // Save new seed for next startup
 }
 
 // Main loop
 while(1)
 {
-  // Wait for button/time and go to sleep - ~8 times/second
-  attiny_sleep(); // Sleep 128ms         
-  if (!low)
+  // Wait for button or time and go to sleep - ~8 times/second
+  attiny_sleep();                    // Sleep 128ms         
+  if (!low) 
   {
     if (!(PINB & (1<<PB2))) JQ6500_play(random(0,21));      // Button event
     if (random(0,Time*60*8)==1) JQ6500_play(random(21,69)); // Time event
@@ -112,39 +115,40 @@ while(1)
   {
     current=MeasureVCC();
     vref=1024*1.1f/(double)current;
-    if (vref<=minCurrent)           // Current below minimum
+    if (vref<=minCurrent)            // Current below minimum
     {
-      if (vref<=battLow) low=true;  // Power to low for JQ6500
-      else JQ6500_play(70);         // NOKOLINO says "Beep"
+      if (vref<=battLow) low=true;   // Power to low for JQ6500
+      else JQ6500_play(70);          // NOKOLINO says "Beep"
     }
     else low=false;
-    counter=400;                    // Every minute, 50x 128ms + some sleeping ms
+    counter=400;                     // Every minute, 50x 128ms + some sleeping ms
   }
   counter--;
   #endif
 }}
 
-void JQ6500_play(uint8_t v) // Plays MP3 number v
+void JQ6500_play(uint8_t v)          // Plays MP3 number v
 {
-  mp3.playFileByIndexNumber(v);
-  while (analogRead(Busy)>50); // Check busy
-  setup_watchdog(8);           // Sleep 4sec - let NOKOlino finish his file
+  mp3.write("\x7E\x04\x03\x01");     // Play file number v
+  mp3.write(v);
+  mp3.write("\xEF");
   attiny_sleep();
-  setup_watchdog(3);
-  mp3.sleep();                 // Go back to sleep, JQ6500!
+  while (analogRead(Busy)>2);        // Check busy
+  attiny_sleep();
+  mp3.write("\x7E\x02\x0A\xEF");     // Go back to sleep, JQ6500!
 }
 
-void attiny_sleep() // Sleep to save power
+void attiny_sleep()                  // Sleep to save power
 {  
-  cbi(ADCSRA,ADEN); // Switch ADC OFF
+  cbi(ADCSRA,ADEN);                  // Switch ADC off
   set_sleep_mode(SLEEP_MODE_PWR_DOWN); 
   sleep_enable();
   sleep_mode();                        
   sleep_disable();                     
-  sbi(ADCSRA,ADEN); // Switch ADC ON
+  sbi(ADCSRA,ADEN);                  // Switch ADC on
 }
 
-void setup_watchdog(uint8_t mode) // Setup wake time
+void setup_watchdog(uint8_t mode)    // Setup wake time
 {
   uint8_t bb;
   bb=mode & 7;
@@ -156,7 +160,7 @@ void setup_watchdog(uint8_t mode) // Setup wake time
   WDTCR |= _BV(WDIE);
 }
 
-uint16_t MeasureVCC(void) // Thank you, Tim!
+uint16_t MeasureVCC(void)            // Thank you, Tim!
 {
     PRR    &=~_BV(PRADC); 
     ADCSRA  =_BV(ADEN)|_BV(ADPS2)|_BV(ADPS1)|_BV(ADPS0); 
@@ -168,9 +172,10 @@ uint16_t MeasureVCC(void) // Thank you, Tim!
     return ADC;
 }
 
-ISR(WDT_vect) // Set global flag
+ISR(WDT_vect)                       // Set global flag
 {
   f_wdt=1; 
 }
+
 
 
