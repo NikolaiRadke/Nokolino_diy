@@ -1,10 +1,10 @@
-/* NOKOlino V1.0 14.03.2017 - Nikolai Radke
+/* NOKOlino V1.0 19.03.2017 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correct.
  *  
- *  Flash-Usage: 3.634 (1.8.1 | ATTiny 1.0.2 | Linux X86_64)
+ *  Flash-Usage: 3.632 (1.8.1 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
  *  
  *  Circuit:
  *  1: RST | PB5  free
@@ -25,19 +25,23 @@
 #include <avr/interrupt.h>
 #include <SoftwareSerial.h>
 
-//-------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 // Configuation
 #define Time    10                  // Say something every statistical 10 minutes
 #define Volume  30                  // Volume 0-30
 
 // Optional - comment out with // to disable
 #define Batterywarning              // NOKOlino gives a warning when battery is low
-//-------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 
 // Optional battery warning
 #define minCurrent   3.50 +Offset   // Low power warning current + Measuring error
 #define battLow      3.30 +Offset   // Minimal voltage before JQ6500 fails
 #define Offset       0.6            // Measuring error | Breadboard: 0.4, PCB: 0.6
+
+// Debugging
+#define maxInput     0              // Max. value of analogRead from busy line
+#define maxBusy      70             // x128mseconds to timeout busy check - 70 = 9s
 
 // Hardware pins
 #define TX      0
@@ -127,15 +131,24 @@ while(1)
   #endif
 }}
 
+void check_busy()
+{
+  uint8_t busy_counter=0;
+  attiny_sleep();
+  while (analogRead(Busy)>maxInput) // Check busy line
+  {
+    attiny_sleep();                 // Wait 128ms
+    if (busy_counter>maxBusy) break;// Check timeout - checking inside while()
+    else busy_counter++;            // didn't work well, however.
+  }
+}
+
 void JQ6500_play(uint8_t v)          // Plays MP3 number v
 {
   mp3.write("\x7E\x04\x03\x01");     // Play file number v
   mp3.write(v);
   mp3.write("\xEF");
-  attiny_sleep();
-  while (analogRead(Busy)>0);        // Check busy
-  attiny_sleep();
-  while (analogRead(Busy)>0);        // Double-check busy
+  check_busy();                      // Check busy line
   mp3.write("\x7E\x02\x0A\xEF");     // Go back to sleep, JQ6500!
 }
 
