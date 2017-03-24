@@ -77,10 +77,10 @@ int main(void) {
 init(); 
 {
   // Power saving
-  MCUCR |= _BV(BODS) | _BV(BODSE);   // Disable brown out detection
-  ACSR |= _BV(ACD);                  // Disable analog comparator
+  MCUCR |= _BV(BODS) | _BV(BODSE);   // Disable brown out detection - default?
+  ACSR |= _BV(ACD);                  // Disable analog comparator - default?
   DDRB &= ~(1<<PB2);                 // D2 INPUT
-  PORTB |= (1<<PB2); // D2 HIGH 
+  PORTB |= (1<<PB2);                 // D2 HIGH 
   
   // Start JQ6500
   mp3.begin(9600);
@@ -135,11 +135,11 @@ void check_busy()
 {
   uint8_t busy_counter=0;
   attiny_sleep();
-  while (analogRead(Busy)>maxInput) // Check busy line
+  while (analogRead(Busy)>maxInput)  // Check busy line
   {
-    attiny_sleep();                 // Wait 128ms
-    if (busy_counter>maxBusy) break;// Check timeout - checking inside while()
-    else busy_counter++;            // didn't work well, however.
+   attiny_sleep();                   // Wait 128ms
+    if (busy_counter>maxBusy) break; // Check timeout - checking inside while()
+    busy_counter++;                  // didn't work well, however.
   }
 }
 
@@ -190,6 +190,8 @@ ISR(WDT_vect)                       // Set global flag
 {
   f_wdt=1; 
 }
+
+
 
 
 
