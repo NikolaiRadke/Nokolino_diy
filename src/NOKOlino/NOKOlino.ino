@@ -1,10 +1,10 @@
-/* NOKOlino V1.0 19.03.2017 - Nikolai Radke
+/* NOKOlino V1.0 31.03.2017 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correct.
  *  
- *  Flash-Usage: 3.636 (1.8.1 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
+ *  Flash-Usage: 3.622 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
  *  
  *  Circuit:
  *  1: RST | PB5  free
@@ -12,7 +12,7 @@
  *  3: A2  | PB4  Busy JQ6500 - 8
  *  4: GND        GND
  *  5: D0  | PB0  TX JQ6500   - 10  (unused)
- *  6: D1  | PB1  RX JQ6500   - 9   (1kOhm)
+ *  6: D1  | PB1  RX JQ6500   - 9   
  *  7: D2  | PB2  Button      - GND
  *  8: VCC        VCC
  *  
@@ -40,7 +40,7 @@
 #define Offset       0.6            // Measuring error | Breadboard: 0.4, PCB: 0.6
 
 // Debugging
-#define maxInput     0              // Max. value of analogRead from busy line
+#define maxInput     1              // Max. value of analogRead from busy line
 #define maxBusy      70             // x128mseconds to timeout busy check - 70 = 9s
 
 // Hardware pins
@@ -156,9 +156,7 @@ void attiny_sleep()                  // Sleep to save power
 {  
   cbi(ADCSRA,ADEN);                  // Switch ADC off
   set_sleep_mode(SLEEP_MODE_PWR_DOWN); 
-  sleep_enable();
-  sleep_mode();                        
-  sleep_disable();                     
+  sleep_mode();                                         
   sbi(ADCSRA,ADEN);                  // Switch ADC on
 }
 

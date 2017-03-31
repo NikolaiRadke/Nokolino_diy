@@ -1,4 +1,4 @@
-/* NOKOlino_easy V1.0 23.03.2017 - Nikolai Radke
+/* NOKOlino_easy V1.0 29.03.2017 - Nikolai Radke
  *  
  *  Easy sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
@@ -12,7 +12,7 @@
  *  3: A2  | PB4  Busy JQ6500 - 8
  *  4: GND        GND
  *  5: D0  | PB0  TX JQ6500   - 10  (unused)
- *  6: D1  | PB1  RX JQ6500   - 9   (1kOhm)
+ *  6: D1  | PB1  RX JQ6500   - 9  
  *  7: D2  | PB2  Button      - GND
  *  8: VCC        VCC
  *  
