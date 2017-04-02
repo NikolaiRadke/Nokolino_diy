@@ -1,17 +1,17 @@
-/* NOKOlino V1.0 31.03.2017 - Nikolai Radke
+/* NOKOlino V1.0 02.04.2017 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correct.
  *  
- *  Flash-Usage: 3.622 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
+ *  Flash-Usage: 3.624 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
  *  
  *  Circuit:
  *  1: RST | PB5  free
  *  2: A3  | PB3  free          
  *  3: A2  | PB4  Busy JQ6500 - 8
  *  4: GND        GND
- *  5: D0  | PB0  TX JQ6500   - 10  (unused)
+ *  5: D0  | PB0  free
  *  6: D1  | PB1  RX JQ6500   - 9   
  *  7: D2  | PB2  Button      - GND
  *  8: VCC        VCC
@@ -106,11 +106,12 @@ init();
 while(1)
 {
   // Wait for button or time and go to sleep - ~8 times/second
-  attiny_sleep();                    // Sleep 128ms         
+  //attiny_sleep();                    // Sleep 128ms         
   if (!low) 
   {
     if (!(PINB & (1<<PB2))) JQ6500_play(random(0,21));      // Button event
-    if (random(0,Time*60*8)==1) JQ6500_play(random(21,69)); // Time event
+    else if (random(0,Time*60*8)==1) JQ6500_play(random(21,69)); // Time event
+    else attiny_sleep();
   }
   
   // Check current, if defined
@@ -137,7 +138,7 @@ void check_busy()
   attiny_sleep();
   while (analogRead(Busy)>maxInput)  // Check busy line
   {
-   attiny_sleep();                   // Wait 128ms
+    attiny_sleep();                  // Wait 128ms
     if (busy_counter>maxBusy) break; // Check timeout - checking inside while()
     busy_counter++;                  // didn't work well, however.
   }
@@ -188,8 +189,4 @@ ISR(WDT_vect)                       // Set global flag
 {
   f_wdt=1; 
 }
-
-
-
-
 
