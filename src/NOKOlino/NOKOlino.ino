@@ -47,7 +47,6 @@
 #define TX      0
 #define RX      1
 #define Busy    2
-#define Batt    3
 
 // ADC and BOD
 #ifndef cbi
@@ -105,8 +104,7 @@ init();
 // Main loop
 while(1)
 {
-  // Wait for button or time and go to sleep - ~8 times/second
-  //attiny_sleep();                    // Sleep 128ms         
+  // Wait for button or time and go to sleep - ~8 times/second         
   if (!low) 
   {
     if (!(PINB & (1<<PB2))) JQ6500_play(random(0,21));      // Button event
@@ -175,18 +173,19 @@ void setup_watchdog(uint8_t mode)    // Setup wake time
 
 uint16_t MeasureVCC(void)            // Thank you, Tim!
 {
-    PRR    &=~_BV(PRADC); 
-    ADCSRA  =_BV(ADEN)|_BV(ADPS2)|_BV(ADPS1)|_BV(ADPS0); 
-    ADMUX   =_BV(REFS2) | 0x0c; 
-    _delay_ms(1);  
-    ADCSRA  |=_BV(ADSC);
-    while (!(ADCSRA&_BV(ADIF))); 
-    ADCSRA  |=_BV(ADIF);
-    return ADC;
+  PRR    &=~_BV(PRADC); 
+  ADCSRA  =_BV(ADEN)|_BV(ADPS2)|_BV(ADPS1)|_BV(ADPS0); 
+  ADMUX   =_BV(REFS2) | 0x0c; 
+  _delay_ms(1);  
+  ADCSRA  |=_BV(ADSC);
+  while (!(ADCSRA&_BV(ADIF))); 
+  ADCSRA  |=_BV(ADIF);
+  return ADC;
 }
 
 ISR(WDT_vect)                       // Set global flag
 {
   f_wdt=1; 
 }
+
 

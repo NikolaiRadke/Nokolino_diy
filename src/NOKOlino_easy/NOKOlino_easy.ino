@@ -11,7 +11,7 @@
  *  2: A3  | PB3  free          
  *  3: A2  | PB4  Busy JQ6500 - 8
  *  4: GND        GND
- *  5: D0  | PB0  TX JQ6500   - 10  (unused)
+ *  5: D0  | PB0  free
  *  6: D1  | PB1  RX JQ6500   - 9  
  *  7: D2  | PB2  Button      - GND
  *  8: VCC        VCC
@@ -33,7 +33,6 @@
 #define TX          0
 #define RX          1
 #define Busy        2
-#define Batt        3
 
 // Variables
 unsigned int seed;
