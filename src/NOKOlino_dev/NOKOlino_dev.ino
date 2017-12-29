@@ -28,7 +28,7 @@
 //--------------------------------------------------------------------------------
 // Configuation
 #define Time      10                // Say something every statistical 10 minutes
-#define Volume    23                // Volume 0-30 - 20-25 is recommended 
+#define Volume    30                // Volume 0-30
 #define ATtiny85                    // Select Microcontroller
 //#define ATtiny45
 
@@ -88,7 +88,6 @@ init();
   MCUCR |= _BV(BODS) | _BV(BODSE);   // Disable brown out detection - default?
   ACSR |= _BV(ACD);                  // Disable analog comparator - default?
   DDRB &= ~(1<<PB2);                 // D2 INPUT
-  PORTB |= (1<<PB2);                 // D2 HIGH 
   
   // Start JQ6500
   mp3.begin(9600);
@@ -124,7 +123,7 @@ while(1)
   // Wait for button or time and go to sleep - ~8 times/second         
   if (!low) 
   {
-    if (!(PINB & (1<<PB2))) JQ6500_play(random(0,21));      // Button event
+    if (PINB & (1<<PB2)) JQ6500_play(random(0,21));      // Button event
     else if (random(0,Time*60*8)==1) JQ6500_play(random(21,69)); // Time event
     else attiny_sleep();
   }
