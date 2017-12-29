@@ -23,7 +23,7 @@
 //--------------------------------------------------------------------------------
 // Configuation
 #define Time        10              // Say something every statistical 10 minutes
-#define Volume      30              // Volume 0-30
+#define Volume      23              // Volume 0-30 - 20-25 is recommended
 
 // Debugging
 #define maxInput    10              // Max. value of analogRead from busy line
