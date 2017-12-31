@@ -43,7 +43,7 @@ NOKO/
     |   Standard version. Full featured. Take this one.
     └── NOKOlino_easy/
         Easy-to-understand learing version. 
- ``
+```
 ### Let's get started!
 
 Interested in NOKO? Great! Let's start here:  
