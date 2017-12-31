@@ -5,7 +5,7 @@ These people helped me bringing life to NOKOlino:
 - **Hans Radke** - (my dad) hardware construction and a lot of soldering.
 - **Regina Radke** - (my mom) monster suit hints.  
 - **Nora Linder** - creating and sewing the monster suit and spellchecking.
-- **Carsten Caniglia** - the voice of NOKO. Look at his [Homepage](http://www.carstencaniglia.com).  
+- **Carsten Caniglia** - the voice of NOKOlino. Look at his [Homepage](http://www.carstencaniglia.com).  
 
 Used ressources:  
 
