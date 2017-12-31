@@ -6,7 +6,7 @@ The ATTiny-based litte brother of NOKO. Tiny and cute. And everyone is invited t
   
 Like his big brother NOKO, the little NOKOlino delights it's surroundings with cheeky comments. But unlike NOKO he is more obstinate - no radio, a display, no frills. Only one on-off switch and a big button, but he is small, can stay active for days and is, in contrast to his big brother, very easy to build.  
 
-**NOKOlino** stands for **NO**ras and Ni**KO**s Monster - the appendix **lino** describes the small version.  
+**NOKOlino** stands for **NO**ra and Ni**KO**s monster - the appendix **lino** describes the small version.  
   
 ### Notes for non-German NOKOlino makers  
   
