@@ -1,10 +1,24 @@
 # ![NOKO](http://www.nikolairadke.de/NOKOlino/nokolino_klein.png) NOKOlino
 
-The ATTiny-based litte brother of NOKO. Tiny and a bit more useless than his brother, but sweet and very easy to build. And again, everyone is invited to **contribute**. NOKOlino is for everyone. What's new? See the [newsblog](https://github.com/NikolaiRadke/NOKOlino/tree/master/NEWS.md).  
+The ATTiny-based litte brother of NOKO. Tiny and cute. And everyone is invited to **contribute**. NOKOlino is for everyone. What's new? See the [newsblog](https://github.com/NikolaiRadke/NOKOlino/tree/master/NEWS.md).  
 
 ![NOKOlino light blue](http://www.nikolairadke.de/NOKOlino/nokolino_wiki.png)
+  
+Like his big brother NOKO, the little NOKOlino delights it's surroundings with cheeky comments. But unlike NOKO he is more obstinate - no radio, a display, no frills. Only one on-off switch and a big button, but he is small, can stay active for days and is, in contrast to his big brother, very easy to build.  
 
-**Coming in a couple of days! Stay tuned!**
+**NOKOlino** stands for **NO**ras and Ni**KO**s Monster - the appendix **lino** describes the small version.  
+
+Right now, the building wiki, the voice set, the manual and the optional EEPROM text files are in German. I'll try to translate the wiki and the manual when the German wiki is completed. Until then, feel free to ask me for translation, if you need help. Contribute! I need an English voice set and English text files. In addition, any other language is welcome, NOKO is to be cosmopolitan!  
+  
+### Notes for non-German NOKOlino makers  
+  
+Right now, the building wiki, the voice set and the manual are in German. I'll try to translate the wiki and the manual on day. Until then, feel free to ask me for translation, if you need help. **Contribute!** I need an English voice set and English text files. In addition, any other language is welcome, NOKO is to be cosmopolitan!
+  
+### Prerequisites
+  
+NOKO needs Arduino IDE 1.6.6 -or newer. (https://www.arduino.cc/en/Main/Software) Copy the folder `NOKO/src/[language]/NOKO/` into your sketch folder and install ATtiny support. See [how to compile](https://github.com/NikolaiRadke/NOKOlino/tree/master/howto_compile) for further instructions. 
+  
+### Content
 
 ```
 NOKO/
