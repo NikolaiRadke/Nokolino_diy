@@ -4,7 +4,7 @@ The ATTiny-based litte brother of NOKO. Tiny and a bit more useless than his bro
 
 ![NOKOlino light blue](http://www.nikolairadke.de/NOKOlino/nokolino_wiki.png)
 
-Coming in a couple of days! Stay tuned!
+**Coming in a couple of days! Stay tuned!**
 
 ```
 NOKO/
