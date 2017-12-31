@@ -2,7 +2,7 @@
  *  
  *  Easy sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
- *  SoftwareSerial needs 8 MHz to work correct.
+ *  SoftwareSerial needs 8 MHz to work correctly.
  *  
  *  Flash-Usage: 3.046 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
  *  
@@ -23,7 +23,7 @@
 //--------------------------------------------------------------------------------
 // Configuation
 #define Time        10              // Say something every statistical 10 minutes
-#define Volume      23              // Volume 0-30 - 20-25 is recommended
+#define Volume      25              // Volume 0-30 - 20-25 is recommended
 
 // Debugging
 #define maxInput    10              // Max. value of analogRead from busy line
@@ -42,7 +42,7 @@ SoftwareSerial mp3(TX,RX);           // TX to D0, RX to D1
 void setup()
 {
   pinMode(2,INPUT);
-  digitalWrite(2,HIGH);              // Pull-Up high
+  digitalWrite(2,HIGH);              // Pull-up high
   mp3.begin(9600);
   mp3.write("\x7E\x02\x0C\xEF");     // Reset JQ6500
   delay(500);

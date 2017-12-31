@@ -2,7 +2,7 @@
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
- *  SoftwareSerial needs 8 MHz to work correct.
+ *  SoftwareSerial needs 8 MHz to work correctly.
  *  
  *  Flash-Usage: 3.604 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
  *  
@@ -28,7 +28,7 @@
 //--------------------------------------------------------------------------------
 // Configuation
 #define Time      10                // Say something every statistical 10 minutes
-#define Volume    23                // Volume 0-30 - 20-25 is recommended 
+#define Volume    25                // Volume 0-30 - 20-25 is recommended 
 #define ATtiny85                    // Select Microcontroller
 //#define ATtiny45
 
@@ -109,7 +109,7 @@ init();
   seed=eeprom_read_word(address);    // Read seed
   randomSeed(seed);
   seed++;
-  if (seed>900)                      // After 900 write-cyles move to another adress
+  if (seed>900)                      // After 900 write-cyles move to another address
   {                                  // to keep the EEPROM alive
     seed=0;
     (address>max_address)? address=2:address+=2;
