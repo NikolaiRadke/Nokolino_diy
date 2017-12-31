@@ -2,6 +2,8 @@
 
 The ATTiny-based litte brother of NOKO. Tiny and cute. And everyone is invited to **contribute**. NOKOlino is for everyone. What's new? See the [newsblog](https://github.com/NikolaiRadke/NOKOlino/tree/master/NEWS.md).  
 
+**NOTE:** This repo is under construction and will be finished in a couple of days. Stay tuned! --31.12.2017
+
 ![NOKOlino light blue](http://www.nikolairadke.de/NOKOlino/nokolino_wiki.png)
   
 Like his big brother NOKO, the little NOKOlino delights it's surroundings with cheeky comments. But unlike NOKO he is more obstinate - no radio, a display, no frills. Only one on-off switch and a big button, but he is small, can stay active for days and is, in contrast to his big brother, very easy to build.  
