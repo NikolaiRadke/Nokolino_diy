@@ -1,6 +1,6 @@
 # Thanks
 
-These people helped me bringing life to NOKO:  
+These people helped me bringing life to NOKOlino:  
   
 - **Hans Radke** - (my dad) hardware construction and a lot of soldering.
 - **Regina Radke** - (my mom) monster suit hints.  
