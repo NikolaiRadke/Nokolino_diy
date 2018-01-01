@@ -7,7 +7,7 @@ You can find the source files in folder [geda/](https://github.com/NikolaiRadke/
 
 ### Other manuals
 
-* **NOKO_Pattern.pdf**:
+* **NOKOlino_Pattern.pdf**:
 NOKOs sewing pattern. 
-* **NOKO_Einkaufsliste.pdf**:
+* **NOKOlino_Einkaufsliste.pdf**:
 Shopping list in German  
