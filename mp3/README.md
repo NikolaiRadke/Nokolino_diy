@@ -1,5 +1,7 @@
 # Voice set for NOKOlino - German
 
+There are to sets: One for the (strongly recommended) 16MBit = **2MByte** variant of the JQ6500, and one for the 8MBit = **1MByte** variant in lower quality.  
+
 Copy these mp3s on the JQ6500 module. Strictly observe the sequence!
 021.mp3 must be copied as the 21st file. See the [Wiki](https://github.com/NikolaiRadke/NOKOlino/wiki/MP3s-aufspielen) for more 
 detailed instructions.  
