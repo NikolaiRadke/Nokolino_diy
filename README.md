@@ -56,7 +56,7 @@ NOKO/
     ├── NOKOlino/
     |   Standard version. Full featured. Take this one.
     └── NOKOlino_easy/
-        Easy-to-understand learing version. 
+        Easy-to-understand learning version. 
 ```
 ### Let's get started!
 
