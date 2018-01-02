@@ -7,8 +7,6 @@
  * notice you can do whatever you want with this stuff. If we meet
  * some day, and you think this stuff is worth it, you can buy me a
  * beer in return.
- * 
- * Nikolai Radke: fixed FLASHSIZE to full 2 MBytes
  */
 
 #include <stdint.h>
@@ -25,13 +23,15 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <glob.h>
 
-#define FLASHSIZE 0x2097152 /* 2MiB   */
+#define FLASHSIZE 0x200000 /* 2MiB   */
 #define BASE       0x40000 /* 256kiB */
 #define MAXSIZE (FLASHSIZE - BASE)
 
 #define ERASE 0xfbd8
 #define WRITE 0xfbd9
+#define READ  0xfd03
 #define BLKSZ 0x1000
 #define TIMEOUT 30000
 
@@ -73,7 +73,8 @@ isdevice(char *file)
 void
 w32le(uint8_t **loc, uint32_t val)
 {
-    memcpy(*loc, &htole32(val), 4);
+    uint32_t le = htole32(val);
+    memcpy(*loc, &le, 4);
     (*loc) += 4;
 }
 
@@ -106,12 +107,12 @@ usage(void)
 	   "files.\n"
 	   "\n"
 	   "Options:\n"
-	   "  -d device   SCSI generic device or file to write to (mandatory)\n"
+	   "  -d device   SCSI generic device or file to write to (default: autodetect)\n"
 	   "  -r          write a single file in raw mode without creating a file system\n"
 	   "  -o offset   default: 0x40000\n"
 	   "  -s prefix   save the content of the pseudo file system on the device\n"
 	   "              to a set of files named prefix-dirno-fileno\n"
-	   "  -f          force operation (disable sanity checks).\n");
+	   "  -f          force operation (disables sanity checks, use with care!)\n");
     
     exit(1);
 }
@@ -212,6 +213,57 @@ jqwrite(char *device, uint8_t *buf, int offset, int size)
 }
 
 int
+jq_identify(char *devname)
+{
+    int dev;
+    struct sg_io_hdr hdr;
+    char buf[32];
+    uint8_t cmd[6] = {0x12, 0, 0, 0, sizeof(buf), 0};
+    
+    dev = open(devname, O_RDONLY);
+    if (dev < 0) {
+	return 0;
+    }
+
+    memset(&hdr, 0, sizeof(hdr));
+    hdr.interface_id = 'S';
+    hdr.timeout = TIMEOUT;
+    hdr.cmdp = cmd;
+    hdr.cmd_len = sizeof(cmd);
+    hdr.dxfer_direction = SG_DXFER_FROM_DEV;
+    hdr.dxfer_len = sizeof(buf);
+    hdr.dxferp = buf;
+    if (ioctl(dev, SG_IO, &hdr) < 0) {
+	err(1, "INQUIRY failed");
+    }
+    close(dev);
+
+    return !memcmp(buf + 8, "YULIN    PROGRAMMER     ", 24);
+}
+
+char *
+jq_find(const char *pattern)
+{
+    glob_t gb;
+    int i, ret;
+    char *devname = NULL;
+    
+    ret = glob(pattern, GLOB_NOSORT | GLOB_ERR, NULL, &gb);   
+    if (ret != 0) {
+	return NULL;
+    }
+    for (i = 0; i < gb.gl_pathc; i++) {
+	if (jq_identify(gb.gl_pathv[i])) {
+	    devname = strdup(gb.gl_pathv[i]);
+	    break;
+	}
+    }
+    globfree(&gb);
+
+    return devname;
+}
+
+int
 main(int argc, char **argv)
 {
     int size, opt;
@@ -252,16 +304,26 @@ main(int argc, char **argv)
     }
 
     if (!force) {
-	if (offset < 0) {
-	    errx(1, "Offset out of range [0..0x2000].");
+	if (offset < 0 || offset >= FLASHSIZE) {
+	    errx(1, "Offset out of range [0..0x%x].", FLASHSIZE);
 	}
 	if (offset % BLKSZ != 0) {
 	    errx(1, "Offset must be a multiple of %d.", BLKSZ);
 	}
     }
 
-    if (device == NULL || optind == argc) {
+    if (optind == argc) {
 	errx(1, "Missing file operand.");
+    }
+
+    if (force && device != NULL) {
+	fprintf(stderr, "Using %s as a JQ6500 module without check.\n", device);
+    } else {
+	device = jq_find(device ? device : "/dev/sg*");
+	if (device == NULL) {
+	    errx(1, "Cannot identify a JQ6500 device.");
+	}
+	fprintf(stderr, "Found a JQ6500 module on %s.\n", device);
     }
 
     if (rawmode) {
@@ -296,3 +358,4 @@ main(int argc, char **argv)
 /* mode: c           */
 /* c-basic-offset: 4 */
 /* End:              */
+
