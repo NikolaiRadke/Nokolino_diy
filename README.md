@@ -2,8 +2,6 @@
 
 The ATTiny-based litte brother of NOKO. Tiny and cute. And everyone is invited to **contribute**. NOKOlino is for everyone. What's new? See the [newsblog](https://github.com/NikolaiRadke/NOKOlino/tree/master/NEWS.md).  
 
-**NOTE:** This repo is under construction and will be finished in a couple of days. Stay tuned! --01.01.2018  
-
 ![NOKOlino light blue](http://www.nikolairadke.de/NOKOlino/nokolino_wiki.png)
   
 Like his big brother NOKO, the little NOKOlino delights it's surroundings with cheeky comments. But unlike NOKO he is more obstinate - no radio, a display, no frills. Instead of an Arduino he has a small **ATtiny** microcontroller, only one on-off switch and a big button. But he is small, can stay active for days and is, in contrast to his big brother, very easy to build.   
@@ -47,7 +45,7 @@ NOKO/
 |       High quality files for the 2MB-JQ6500.
 |
 ├── schematics/
-|   The Schematics for the NOKOlino parts, the NOKO sewing pattern and shopping lists.
+|   The schematics for the NOKOlino parts, the NOKO sewing pattern and shopping lists.
 |   └── geda/
 |       Source documents for gEDA.
 |
