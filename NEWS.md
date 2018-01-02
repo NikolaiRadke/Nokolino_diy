@@ -1,6 +1,7 @@
 # Newsblog
 
 ## 2018  
+* **02.01.2018** Finished the GitHub. Now the Wiki will be completed.  
 * **01.01.2018** Happy new year! I finished the sewing pattern this (tired) day.  
   
 ## 2017
