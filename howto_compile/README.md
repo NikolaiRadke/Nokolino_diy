@@ -36,6 +36,12 @@ In order to flash your ATtiny with the NOKOlino-sketch, you need the **Arduino-I
 
 Now you can flash your ATtiny with any sketch you want! But this time, we concentrate on NOKOlino.  
 
+### Configuring NOKOlino.ino
+
+1. Set the avarage talking interval in line 30 (10 for 10 minutes is preset)
+2. Select your microcontroller in line 32 and 33 (ATtiny85 is preset).
+3. If you don't want any Battery warnings comment out line 36
+
 ### Flashing NOKOlino firmware
   
 1. Open sketch **NOKOlino.ino**.  
