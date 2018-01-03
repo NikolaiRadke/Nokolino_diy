@@ -1,7 +1,7 @@
 # Newsblog
 
 ## 2018  
-* **03.01.2018** Finished the Wiki - NOKOlino is ready for the world!  
+* **03.01.2018** Finished the Wiki - NOKOlino is ready for the world with release **V1.0-030118**.   
 * **02.01.2018** Finished the GitHub. Now the Wiki will be completed.  
 * **01.01.2018** Happy new year! I finished the sewing pattern this (tired) day.  
   
