@@ -4,8 +4,10 @@ The ATTiny-based litte brother of NOKO. Tiny and cute. And everyone is invited t
 
 ![NOKOlino light blue](http://www.nikolairadke.de/NOKOlino/nokolino_wiki.png)
   
-Like his big brother NOKO, the little NOKOlino delights it's surroundings with cheeky comments. But unlike NOKO he is more obstinate - no radio, a display, no frills. Instead of an Arduino he has a small **ATtiny** microcontroller, only one on-off switch and a big button. But he is small, can stay active for days and is, in contrast to his big brother, very easy to build.   
-
+Like his big brother NOKO, the little NOKOlino delights it's surroundings with cheeky comments. But unlike NOKO he is more obstinate - no radio, a display, no frills. Instead of an Arduino he has a small **ATtiny** microcontroller, only one on-off switch and a big button. But he is small, can stay active for days and is, in contrast to his big brother, very easy to build.  
+  
+Another useful application option would be to use the hardware without the monster suit as a **music box** in an old used doll to bring it back to modern days, maybe with other sounds or songs.  
+  
 **NOKOlino** stands for **NO**ra and Ni**KO**s monster - the appendix **lino** describes the small version.  
   
 ### Notes for non-German NOKOlino makers  
