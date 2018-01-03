@@ -58,6 +58,6 @@ NOKO/
 ```
 ### Let's get started!
 
-Interested in NOKO? Great! Let's start here:  
+Interested in NOKOlino? Great! Let's start here:  
 [German wiki](https://github.com/NikolaiRadke/NOKOlino/wiki).  
 English wiki will follow. One day...
