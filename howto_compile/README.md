@@ -1,6 +1,6 @@
 # Compiling instructions for NOKOlino
 
-In order to flash your ATtiny with the NOKOlino-sketch, you need the **Arduino-IDE** (1.6.6 odr higher), with installed **ATtiny-Support** and an **Arduino** connected to your microcontroller.
+In order to flash your ATtiny with the NOKOlino-sketch, you need the **Arduino-IDE** (1.6.6 odr higher), with installed **ATtiny-support** and an **Arduino** connected to your microcontroller.
 
 ### Preparing the IDE  
  
@@ -14,7 +14,7 @@ In order to flash your ATtiny with the NOKOlino-sketch, you need the **Arduino-I
 
 ### Peparing your Arduino  
 
-1. Connect your Arduino to your System.  
+1. Connect your Arduino to your system.  
 2. Open ``` File > Examples > ArduinoISP > ArduinoISP ```.  
 3. Upload the sketch.
 
@@ -27,7 +27,7 @@ In order to flash your ATtiny with the NOKOlino-sketch, you need the **Arduino-I
   
 ### Burning an Attiny bootloader  
 
-1. Connect your Arduino to your System again.  
+1. Connect your Arduino to your system again.  
 2. Select ``` Tools > Programmer > Arduino as ISP ```.  
 3. Select ``` Tools > Board > ATtiny ```.  
 4. Select ``` Tools > Processor > ATtiny85 ``` or ``` Tools > Processor > ATtiny45 ```.  
@@ -40,7 +40,7 @@ Now you can flash your ATtiny with any sketch you want! But this time, we concen
 
 1. Set the avarage talking interval in line 30 (10 for 10 minutes is preset)
 2. Select your microcontroller in line 32 and 33 (ATtiny85 is preset).
-3. If you don't want any Battery warnings comment out line 36
+3. If you don't want any battery warnings, comment out line 36
 
 ### Flashing NOKOlino firmware
   
@@ -48,4 +48,4 @@ Now you can flash your ATtiny with any sketch you want! But this time, we concen
 2. Upload the sketch.  
 3. DONE.  
 
-Now you can remove the microcontroller. You should keep the wireing alive to easly make some changes in the firmware.  
+Now you can remove the microcontroller. You should keep the wiring alive to easly make some changes in the firmware.  
