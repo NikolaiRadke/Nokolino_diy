@@ -10,4 +10,4 @@ You can find the source files in folder [geda/](https://github.com/NikolaiRadke/
 * **NOKOlino_Pattern.pdf**:
 NOKOs sewing pattern. 
 * **NOKOlino_Einkaufsliste.pdf**:
-Shopping list in German  
+Shopping list in German.  
