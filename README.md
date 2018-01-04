@@ -25,17 +25,17 @@ NOKO/
 ├── howto_compile/
 |   Manual how compile the sketches in your Arduino IDE and precompiled sketched  
 |   └── precompiled/
-|       Precompiled hex-files
+|       Precompiled hex files
 |       ├── ATtiny45/
-|       |   Versions for the ATtiny45.
+|       |   Version for the ATtiny45.
 |       └── ATtiny85/
-|           Versions for the ATtiny85.
+|           Version for the ATtiny85.
 |
 ├── linux_uploader/
 |   Tool for uploading MP3-files to the JQ6500.
 |
 ├── manual/
-|   NOKO manual in PDF format and a template for a packaging desin.
+|   NOKO manual in PDF format and a template for a packaging design.
 |   └── scribus/
 |       Source documents for Scribus with all illustrations and fonts.
 |
@@ -47,7 +47,7 @@ NOKO/
 |       High quality files for the 2MB-JQ6500.
 |
 ├── schematics/
-|   The schematics for the NOKOlino parts, the NOKO sewing pattern and shopping lists.
+|   The schematics for the NOKOlino parts, the NOKO sewing pattern and shopping list.
 |   └── geda/
 |       Source documents for gEDA.
 |
