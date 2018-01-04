@@ -14,6 +14,6 @@ detailed instructions.
 | 021-069 | Time based events        |
 | 70      | BEEP battery warning     |
   
-  has been spoken by my fellow actor [Carsten Caniglia](http://www.carstencaniglia.com). Why? 
+The voice has been spoken by my fellow actor [Carsten Caniglia](http://www.carstencaniglia.com). Why? 
 He has done a great job - moreover I don't want to listen to my own voice every day, especially when development takes more than a year! (Ian said I sound really weird in real life. Thanks, mate.)  
 
