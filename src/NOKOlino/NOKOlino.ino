@@ -1,4 +1,4 @@
-/* NOKOlino V1.0 25.05.2017 - Nikolai Radke
+/* NOKOlino V1.0 05.01.2018 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
@@ -27,13 +27,16 @@
 
 //--------------------------------------------------------------------------------
 // Configuation
-#define Time      10                // Say something every statistical 10 minutes
-#define Volume    25                // Volume 0-30 - 20-25 is recommended 
+#define Time         10             // Say something every statistical 10 minutes
+#define Volume       25             // Volume 0-30 - 20-25 is recommended 
 #define ATtiny85                    // Select Microcontroller
-//#define ATtiny45
+//#define ATtiny45              
+
+#define Button_event 20             // Last button event number (20.mp3)
+#define Time_event   69             // Last time event number (69.mp3)
 
 // Optional - comment out with // to disable
-#define Batterywarning              // NOKOlino gives a warning when battery is low
+#define Batterywarning             // NOKOlino gives a warning when battery is low
 //---------------------------------------------------------------------------------
 
 // Optional battery warning
@@ -124,8 +127,8 @@ while(1)
   // Wait for button or time and go to sleep - ~8 times/second         
   if (!low) 
   {
-    if (!(PINB & (1<<PB2))) JQ6500_play(random(0,21));      // Button event
-    else if (random(0,Time*60*8)==1) JQ6500_play(random(21,69)); // Time event
+    if (!(PINB & (1<<PB2))) JQ6500_play(random(0,Button_event+1));      // Button event
+    else if (random(0,Time*60*8)==1) JQ6500_play(random(21,Time_event+1)); // Time event
     else attiny_sleep();
   }
   
@@ -138,7 +141,7 @@ while(1)
     if (vref<=minCurrent)            // Current below minimum
     {
       if (vref<=battLow) low=true;   // Power to low for JQ6500
-      else JQ6500_play(70);          // NOKOLINO says "Beep"
+      else JQ6500_play(Time_event+1);// NOKOLINO says "Beep"
     }
     else low=false;
     counter=400;                     // Every minute, 50x 128ms + some sleeping ms
