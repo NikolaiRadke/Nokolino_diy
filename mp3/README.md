@@ -22,4 +22,6 @@ He has done a great job - moreover I don't want to listen to my own voice every 
 You want to use your own files? No problem. Look into the sketch **NOKOlino.ino** and change the lines  
 ``` #define Button_event  20 ```  for the last voice file (20.mp3 in this case) when the button is pressed and  
 ``` #define Time_event   69``` for the last voice file (69.mp3 in this case) for the time based events.  
-The *beep* for the battery warning should be the last file (70.mp3 in this case). Keep in your mind, that the device ist limited to **2MByte - 256kb** or **1MByte - 256kb**!
+The *beep* for the battery warning should be the last file (70.mp3 in this case).  
+  
+Keep in your mind, that the device ist limited to **2MByte - 256kb** or **1MByte - 256kb**!
