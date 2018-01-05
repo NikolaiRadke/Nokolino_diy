@@ -1,7 +1,9 @@
 # Newsblog
 
 ## 2018  
-* **05.01.2018** New firmware **050118** - Bugfix: Last time event was unused. Enhanchement: Easier optional voice set replacement
+* **05.01.2018** New firmware **050118**:  
+Bugfix: Last time event was unused.  
+Enhanchement: Easier optional voice set replacement
 * **04.01.2018** Bugfixing day.  
 * **03.01.2018** Finished the Wiki - NOKOlino is ready for the world with release **V1.0-030118**.   
 * **02.01.2018** Finished the GitHub. Now the Wiki will be completed.  
