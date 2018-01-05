@@ -17,3 +17,7 @@ detailed instructions.
 The voice has been spoken by my fellow actor [Carsten Caniglia](http://www.carstencaniglia.com). Why? 
 He has done a great job - moreover I don't want to listen to my own voice every day, especially when development takes more than a year! (Ian said I sound really weird in real life. Thanks, mate.)  
 
+### Your own voice set  
+  
+You want to use your own files? No problem. Look into the sketch **NOKOlino.ino** and change the lines  
+``` #define Button_event  20 ``` 
