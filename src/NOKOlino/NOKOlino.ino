@@ -128,7 +128,7 @@ while(1)
   if (!low) 
   {
     if (!(PINB & (1<<PB2))) JQ6500_play(random(0,Button_event+1));      // Button event
-    else if (random(0,Time*60*8)==1) JQ6500_play(random(21,Time_event+1)); // Time event
+    else if (random(0,Time*60*8)==1) JQ6500_play(random(Button_event+1,Time_event+1)); // Time event
     else attiny_sleep();
   }
   
