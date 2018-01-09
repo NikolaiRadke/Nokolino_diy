@@ -13,5 +13,5 @@ Enhancement: Easier optional voice set replacement.
 * **01.01.2018** Happy new year! I finished the sewing pattern this (tired) day.  
   
 ## 2017
-* **31.12.2017** Created this file. NOKOlino is ready to release!  
+* **31.12.2017** Created this file. NOKOlino is ready to release! Wait! Not now, it is party time :-)  
 The hardware is finished and the firmware **1.0-250517** is working great.  
