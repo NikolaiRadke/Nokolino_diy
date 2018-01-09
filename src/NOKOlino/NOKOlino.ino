@@ -4,7 +4,7 @@
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correctly.
  *  
- *  Flash-Usage: 3.710 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
+ *  Flash-Usage: 3.714 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
  *  
  *  Circuit:
  *  1: RST | PB5  free
@@ -24,6 +24,7 @@
 #include <avr/sleep.h>
 #include <avr/interrupt.h>
 #include <SoftwareSerial.h>
+#include <EEPROM.h>
 
 //--------------------------------------------------------------------------------
 // Configuation
@@ -52,13 +53,6 @@
 #define TX      0
 #define RX      1
 #define Busy    2
-
-// Define EEPROM size, depending on ATtiny type (512 bytes or 256 bytes)
-#ifdef Attiny85 
-  #define max_address 510
-#else
-  #define max_address 252
-#endif
 
 // ADC and BOD
 #ifndef cbi
@@ -109,8 +103,8 @@ init();
 
   // Randomize number generator
   address=eeprom_read_word(0);       // Read EEPROM address
-  if ((address<2) || (address>max_address))             
-  {                                  // Initialize EEPROM for first use or after end of cycle
+  if ((address<2) || (address>(EEPROM.length()-3)))             
+  {                                  // Initialize EEPROM and size for first use or after end of cycle
     address = 2;                     // Starting address
     eeprom_write_word(0,address);    // Write starting address
     eeprom_write_word(address,0);    // Write seed 0
