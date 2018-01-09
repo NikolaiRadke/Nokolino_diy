@@ -1,6 +1,8 @@
 # Newsblog
 
 ## 2018  
+* **09.01.2018** New firmware **090118**:
+Bugfix: EEPROM seed cyle now runs without initial settings.  
 * **05.01.2018** New firmware **050118**:  
 Bugfix: Last time event was unused.  
 Enhancement: Easier optional voice set replacement.
