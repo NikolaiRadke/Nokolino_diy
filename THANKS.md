@@ -6,7 +6,12 @@ These people helped me bringing life to NOKOlino:
 - **Regina Radke** - (my mom) monster suit hints.  
 - **Nora Linder** - creating and sewing the monster suit and spellchecking.
 - **Carsten Caniglia** - the voice of NOKOlino. Look at his [Homepage](http://www.carstencaniglia.com).  
+- **Helga Hansen** - from the Make Magazin for promoting NOKOlino.  
+  
+Active supporters:  
 
+- **"Brickhub** - bugfixes.  
+  
 Used ressources:  
 
 - **Arduino board and IDE** - [www.arduino.cc](http://www.arduino.cc)  
