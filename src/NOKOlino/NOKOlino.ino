@@ -112,7 +112,7 @@ init();
   if ((address<2) || (address>max_address))             
   {                                  // Initialize EEPROM for first use or after end of cycle
     address = 2;                     // Starting address
-    eeprom_write_word(0,address);    // Write starting adress
+    eeprom_write_word(0,address);    // Write starting address
     eeprom_write_word(address,0);    // Write seed 0
   }
   seed=eeprom_read_word(address);    // Read seed
