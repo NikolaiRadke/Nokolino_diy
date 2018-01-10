@@ -1,10 +1,10 @@
-/* NOKOlino V1.0 05.01.2018 - Nikolai Radke
+/* NOKOlino V1.0 09.01.2018 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correctly.
  *  
- *  Flash-Usage: 3.604 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
+ *  Flash-Usage: 3.724 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
  *  
  *  Circuit:
  *  1: RST | PB5  free
@@ -24,12 +24,13 @@
 #include <avr/sleep.h>
 #include <avr/interrupt.h>
 #include <SoftwareSerial.h>
+#include <EEPROM.h>
 
 //--------------------------------------------------------------------------------
 // Configuation
 #define Time         10             // Say something every statistical 10 minutes
 #define Volume       25             // Volume 0-30 - 20-25 is recommended 
-#define ATtiny85                    // Select Microcontroller
+#define ATtiny85                    // Select microcontroller
 //#define ATtiny45              
 
 #define Button_event 20             // Last button event number (20.mp3)
@@ -40,32 +41,25 @@
 //---------------------------------------------------------------------------------
 
 // Optional battery warning
-#define minCurrent   3.50 +Offset   // Low power warning current + Measuring error
+#define minCurrent   3.50 +Offset   // Low power warning current + measuring error
 #define battLow      3.30 +Offset   // Minimal voltage before JQ6500 fails
 #define Offset       0.6            // Measuring error | Breadboard: 0.4, PCB: 0.6
 
 // Debugging
 #define maxInput     1              // Max. value of analogRead from busy line
-#define maxBusy      70             // x128mseconds to timeout busy check - 70 = 9s
+#define maxBusy      70             // x128 mseconds to timeout busy check - 70 = 9s
 
 // Hardware pins
 #define TX      0
 #define RX      1
 #define Busy    2
 
-// Define EEPROM size
-#ifdef Attiny85 
-  #define max_address 253
-#else
-  #define max_address 125
-#endif
-
 // ADC and BOD
 #ifndef cbi
-#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+  #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif
 #ifndef sbi
-#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+  #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 #define BODS 7                       // BOD sleep bit in MCUCR
 #define BODSE 2                      // BOD sleep enable bit in MCUCR
@@ -109,15 +103,21 @@ init();
 
   // Randomize number generator
   address=eeprom_read_word(0);       // Read EEPROM address
+  if ((address<2) || (address>(EEPROM.length()-3)))             
+  {                                  // Initialize EEPROM and size for first use or after end of cycle
+    address = 2;                     // Starting address
+    eeprom_write_word(0,address);    // Write starting address
+    eeprom_write_word(address,0);    // Write seed 0
+  }
   seed=eeprom_read_word(address);    // Read seed
-  randomSeed(seed);
-  seed++;
   if (seed>900)                      // After 900 write-cyles move to another address
   {                                  // to keep the EEPROM alive
     seed=0;
-    (address>max_address)? address=2:address+=2;
+    address+=2;
     eeprom_write_word(0,address);
   }
+  randomSeed(seed);                  // Randomize
+  seed++;                            // New seed
   eeprom_write_word(address,seed);   // Save new seed for next startup
 }
 
@@ -140,7 +140,7 @@ while(1)
     vref=1024*1.1f/(double)current;
     if (vref<=minCurrent)            // Current below minimum
     {
-      if (vref<=battLow) low=true;   // Power to low for JQ6500
+      if (vref<=battLow) low=true;   // Power too low for JQ6500
       else JQ6500_play(Time_event+1);// NOKOLINO says "Beep"
     }
     else low=false;
