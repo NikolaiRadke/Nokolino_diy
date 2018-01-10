@@ -1,4 +1,4 @@
-/* NOKOlino V1.0 09.01.2018 - Nikolai Radke
+/* NOKOlino V1.0 10.01.2018 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
