@@ -1,6 +1,7 @@
 # Newsblog
 
 ## 2018  
+* **10.01.2018** Alas, another bug found. New firmware **1.0-100118**.  
 * **09.01.2018** New firmware **1.0-090118**:  
 Bugfix: EEPROM seed cyle now runs without initial settings.  
 * **08.01.2018** NOKOlino appears on [Heise Newsticker](https://www.heise.de/make/meldung/Nokolino-die-Miniaturausgabe-von-MP3-Monster-Noko-3935030.html)!  
