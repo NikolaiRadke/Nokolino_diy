@@ -1,7 +1,7 @@
 # Newsblog
 
 ## 2018  
-* **11.01.2018** **Hardware bug found**: The speaker is connected to *pin 16 and pin 15*, not *pin 15 and pin 14*.   
+* **11.01.2018** **Hardware bug found**: The speaker is connected to *pin 16 and pin 15*, not *pin 16 and pin 14*.   
 * **10.01.2018** Alas, another bug found. New firmware **1.0-100118**:
 Bugfix: Custom voice set with own events is now working correctly.  
 * **09.01.2018** New firmware **1.0-090118**:  
