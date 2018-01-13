@@ -1,6 +1,6 @@
 # Uploading Files on the JQ6500 with Linux
 
-It is quite easy with this command line tool, written by [Max Reinhard](https://chiselapp.com/user/rmax/repository/jq6500/info/c1573d3e82fb9bb3).  I added a precompiled version (64 Bit).
+It is quite easy with this command line tool, written by [Max Reinhard](https://chiselapp.com/user/rmax/repository/jq6500/info/c1573d3e82fb9bb3).  I added a precompiled version (64 Bit). It is NOT conmpletely free, it is beerware... ;-)  
 
 1. Check, if ``` ./JQ6500 ``` is running.  
 2. If not, compile it by yourself, just by typing ``` make ```. 
