@@ -45,8 +45,10 @@ NOKO/
 |   Voiceset for NOKOlino in German. English needed? Contribute!
 |   ├── mp3_8MBit/
 |   |   Low qualitiy files for the 1MB-JQ6500.
-|   └── mp3_16MBit/
-|       High quality files for the 2MB-JQ6500.
+|   ├── mp3_16MBit/
+|   |   High quality files for the 2MB-JQ6500.
+|   └── mp3_32MBit/
+|       Enhanched voice set for the 4MB-JQ6500.  
 |
 ├── schematics/
 |   The schematics for the NOKOlino parts, the NOKO sewing pattern and shopping list.
