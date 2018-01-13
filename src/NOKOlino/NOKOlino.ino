@@ -1,4 +1,4 @@
-/* NOKOlino V1.0 10.01.2018 - Nikolai Radke
+/* NOKOlino V1.0 13.01.2018 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
@@ -33,8 +33,22 @@
 #define ATtiny85                    // Select microcontroller
 //#define ATtiny45              
 
-#define Button_event 20             // Last button event number (20.mp3)
-#define Time_event   69             // Last time event number (69.mp3)
+#define Set_8MBit_16MBit
+//#define Set_32_MBit
+//#define Set_own
+
+#ifdef Set_8MBit_16MBit
+  #define Button_event 20           // Last button event number (20.mp3)
+  #define Time_event   69           // Last time event number (69.mp3)
+#endif
+#ifdef Set_32MBit
+  #define Button_event 40
+  #define Time_event   164
+#endif
+#ifdef Set_own
+  #define Button_event 0
+  #define Time_event   0
+#endif
 
 // Optional - comment out with // to disable
 #define Batterywarning             // NOKOlino gives a warning when battery is low
@@ -46,7 +60,7 @@
 #define Offset       0.6            // Measuring error | Breadboard: 0.4, PCB: 0.6
 
 // Debugging
-#define maxInput     1              // Max. value of analogRead from busy line
+#define maxInput     1              // Max. value from busy line. Breadboard: try 50
 #define maxBusy      70             // x128 mseconds to timeout busy check - 70 = 9s
 
 // Hardware pins
