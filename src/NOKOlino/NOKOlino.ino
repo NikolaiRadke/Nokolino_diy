@@ -43,7 +43,7 @@
 #endif
 #ifdef Set_32MBit
   #define Button_event 40
-  #define Time_event   164
+  #define Time_event   163
 #endif
 #ifdef Set_own
   #define Button_event 0
