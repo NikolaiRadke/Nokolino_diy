@@ -1,6 +1,7 @@
 # Newsblog
 
 ## 2018  
+* **13.01.2018** Firmware **1.0-130118** and the enhanced voice set files for the 32MBit-JQ6500 variant added.  
 * **11.01.2018** **Hardware bug found**: The speaker is connected to *pin 16 and pin 15*, not *pin 16 and pin 14*.   
 * **10.01.2018** Alas, another bug found. New firmware **1.0-100118**:
 Bugfix: Custom voice set with own events is now working correctly.  
