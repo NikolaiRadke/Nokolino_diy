@@ -1,4 +1,4 @@
-update=Mon 15 Jan 2018 13:08:06 CET
+update=Mon 15 Jan 2018 16:32:04 CET
 version=1
 last_client=kicad
 [pcbnew]
@@ -59,3 +59,15 @@ LibName27=atmel
 LibName28=contrib
 LibName29=valves
 LibName30=switches
+LibName31=/home/stoth05/Dokumente/NOKOlino/Crayfish-NOKOlino/NOKOlino/schematics/kicad/NOKOlino
+LibName32=/home/stoth05/Dokumente/NOKO_2.1/NOKO_2
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
