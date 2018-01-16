@@ -3,7 +3,7 @@
   (general
     (links 32)
     (no_connects 0)
-    (area 133.124999 87.424999 183.275001 137.575001)
+    (area 123.100002 83.3 183.425001 137.725001)
     (thickness 1.6)
     (drawings 21)
     (tracks 113)
@@ -745,11 +745,11 @@
   )
 
   (module NOKOlino:NOKO_Logo (layer B.Cu) (tedit 5A5E56B8) (tstamp 5A5F0831)
-    (at 145.8 111.1 270)
-    (fp_text reference G*** (at 0.34 -1.09 270) (layer B.SilkS) hide
+    (at 164 105.4 180)
+    (fp_text reference G*** (at 0.34 -1.09 180) (layer B.SilkS) hide
       (effects (font (thickness 0.3)) (justify mirror))
     )
-    (fp_text value LOGO (at 0.28 0.61 270) (layer B.SilkS) hide
+    (fp_text value LOGO (at 0.28 0.61 180) (layer B.SilkS) hide
       (effects (font (thickness 0.3)) (justify mirror))
     )
     (fp_poly (pts (xy 6.034535 11.887644) (xy 6.270673 11.123709) (xy 6.361216 10.512778) (xy 6.573916 9.263932)
@@ -830,7 +830,7 @@
       (xy 3.076915 6.664371) (xy 3.521782 6.70986) (xy 4.126549 6.364687)) (layer B.SilkS) (width 0.01))
   )
 
-  (gr_text "NOKOlino\nby Nikolai Radke" (at 166.1 103 90) (layer B.SilkS)
+  (gr_text "NOKOlino\nby Nikolai Radke" (at 144.15 110.15) (layer B.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3) italic) (justify mirror))
   )
   (gr_text + (at 180.05 103.8) (layer F.SilkS)
