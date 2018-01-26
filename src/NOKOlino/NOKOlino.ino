@@ -38,9 +38,10 @@
 //#define Breadboard                // Breadboard or PCB?
 #define PCB
 
-//#define Set_8MBit_16MBit
+// Voice set selection
+#define Set_8MBit_16MBit
 //#define Set_32MBit
-#define Set_own
+//#define Set_own
 
 #ifdef Set_8MBit_16MBit
   #define Button_event 20           // Last button event number (20.mp3)
