@@ -1,4 +1,4 @@
-/* NOKOlino V1.0 13.01.2018 - Nikolai Radke
+/* NOKOlino V1.0 26.01.2018 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
@@ -30,12 +30,17 @@
 // Configuation
 #define Time         10             // Say something every statistical 10 minutes
 #define Volume       25             // Volume 0-30 - 20-25 is recommended 
-#define ATtiny85                    // Select microcontroller
-//#define ATtiny45              
 
-#define Set_8MBit_16MBit
-//#define Set_32_MBit
-//#define Set_own
+// Hardware settings
+#define ATtiny85                    // Select microcontroller
+//#define ATtiny45             
+
+//#define Breadboard                // Breadboard or PCB?
+#define PCB
+
+//#define Set_8MBit_16MBit
+//#define Set_32MBit
+#define Set_own
 
 #ifdef Set_8MBit_16MBit
   #define Button_event 20           // Last button event number (20.mp3)
@@ -50,6 +55,15 @@
   #define Time_event   0
 #endif
 
+#ifdef Breadboard
+  #define Offset       0.4          // Battery measuring error
+  #define maxInput     50           // Max. value from busy line. 
+#endif
+#ifdef PCB
+  #define Offset       0.6
+  #define maxInput     1
+#endif
+
 // Optional - comment out with // to disable
 #define Batterywarning             // NOKOlino gives a warning when battery is low
 //---------------------------------------------------------------------------------
@@ -57,10 +71,8 @@
 // Optional battery warning
 #define minCurrent   3.50 +Offset   // Low power warning current + measuring error
 #define battLow      3.30 +Offset   // Minimal voltage before JQ6500 fails
-#define Offset       0.6            // Measuring error | Breadboard: 0.4, PCB: 0.6
 
 // Debugging
-#define maxInput     1              // Max. value from busy line. Breadboard: try 50
 #define maxBusy      70             // x128 mseconds to timeout busy check - 70 = 9s
 
 // Hardware pins
