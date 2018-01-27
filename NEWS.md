@@ -1,7 +1,9 @@
 # Newsblog
 
 ## 2018  
-* **26.01.2018** New Firmware **1.0-260118**:  
+* **27.01.2018** New firmware **1,0-270118**:  
+Enhancement: Using EEPROM.length() makes ATtiny selection obsolete.  
+* **26.01.2018** New firmware **1.0-260118**:  
 Bugfix: New voice set selection compiles without errors now.  
 Enhancement: Easy PCD/Breadboard switching.  
 * **13.01.2018** Firmware **1.0-130118** and the enhanced voice set files for the 32MBit-JQ6500 variant added.  
