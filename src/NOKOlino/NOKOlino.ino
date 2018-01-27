@@ -1,4 +1,4 @@
-/* NOKOlino V1.0 26.01.2018 - Nikolai Radke
+/* NOKOlino V1.0 27.01.2018 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
@@ -31,12 +31,7 @@
 #define Time         10             // Say something every statistical 10 minutes
 #define Volume       25             // Volume 0-30 - 20-25 is recommended 
 
-// Hardware settings
-#define ATtiny85                    // Select microcontroller
-//#define ATtiny45             
-
 //#define Breadboard                // Breadboard or PCB?
-#define PCB
 
 // Voice set selection
 #define Set_8MBit_16MBit
@@ -59,8 +54,7 @@
 #ifdef Breadboard
   #define Offset       0.4          // Battery measuring error
   #define maxInput     50           // Max. value from busy line. 
-#endif
-#ifdef PCB
+#else
   #define Offset       0.6
   #define maxInput     1
 #endif
