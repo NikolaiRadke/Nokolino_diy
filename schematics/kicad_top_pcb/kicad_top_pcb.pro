@@ -1,4 +1,4 @@
-update=So 21 Jan 2018 16:03:23 CET
+update=Sa 27 Jan 2018 21:58:52 CET
 version=1
 last_client=kicad
 [pcbnew]
@@ -23,8 +23,6 @@ ModuleOutlineThickness=0.150000000000
 [cvpcb]
 version=1
 NetIExt=net
-[general]
-version=1
 [eeschema]
 version=1
 LibDir=
@@ -59,3 +57,5 @@ LibName27=atmel
 LibName28=contrib
 LibName29=valves
 LibName30=/home/stoth05/Dokumente/NOKOlino/Crayfish-NOKOlino/NOKOlino/schematics/kicad/NOKOlino
+[general]
+version=1
