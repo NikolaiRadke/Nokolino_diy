@@ -3,7 +3,7 @@
   (general
     (links 32)
     (no_connects 0)
-    (area 123.500001 83.3 184.825 147.725001)
+    (area 133.124999 87.424999 183.275001 147.575001)
     (thickness 1.6)
     (drawings 13)
     (tracks 85)
@@ -665,7 +665,7 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
-    (model ../../../../../home/stoth05/Dokumente/NOKOlino/Crayfish-NOKOlino/NOKOlino/schematics/kicad/packages3d/Connectors_JST.3dshapes/JST_EH_S02B-EH_02x2.50mm_Angled.wrl
+    (model ../../../../../home/stoth05/kicad-library/modules/packages3d/Connectors_JST.3dshapes/JST_EH_S02B-EH_02x2.50mm_Angled.wrl
       (at (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
