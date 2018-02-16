@@ -40,9 +40,6 @@
       (place SW5 146800 -95000 front 0 (PN On/Off))
       (place A1 175750 -103650 front 270 (PN Akku))
     )
-    (component "NOKOlino:TP4056-Protect"
-      (place U1 159150 -138500 front 180 (PN TP4056))
-    )
     (component "Housings_DIP:DIP-8_W7.62mm"
       (place U2 142950 -138250 front 180 (PN "ATTINY85-20PU"))
     )
@@ -60,6 +57,9 @@
     )
     (component "NOKOlino:JQ6500-16p"
       (place M1 143450 -117650 front 0 (PN JQ6500))
+    )
+    (component "NOKOlino:TP4056-Protect"
+      (place U1 159150 -138500 front 180 (PN TP4056))
     )
   )
   (library
@@ -137,18 +137,6 @@
       (outline (path signal 50  5650 7350  -3150 7350))
       (pin Rect[A]Pad_1850x1850_um 1 0 0)
       (pin Round[A]Pad_1850_um 2 2500 0)
-    )
-    (image "NOKOlino:TP4056-Protect"
-      (outline (path signal 150  -13970 8890  -13970 -8890))
-      (outline (path signal 150  13970 8890  13970 -8890))
-      (outline (path signal 150  -13970 8890  13970 8890))
-      (outline (path signal 150  13970 -8890  -13970 -8890))
-      (pin Round[A]Pad_1524_um 4 11430 3810)
-      (pin Round[A]Pad_1524_um 5 11430 -3810)
-      (pin Round[A]Pad_1524_um 6 11430 -6350)
-      (pin Round[A]Pad_1524_um 3 11430 6350)
-      (pin Round[A]Pad_1524_um 2 -11430 -6350)
-      (pin Round[A]Pad_1524_um 1 -11430 6350)
     )
     (image "Housings_DIP:DIP-8_W7.62mm"
       (outline (path signal 100  1635 1270  6985 1270))
@@ -298,6 +286,18 @@
       (pin Round[A]Pad_1524_um 17 1200 13600)
       (pin Round[A]Pad_1524_um 18 -1200 13600)
     )
+    (image "NOKOlino:TP4056-Protect"
+      (outline (path signal 150  -13970 8890  -13970 -8890))
+      (outline (path signal 150  13970 8890  13970 -8890))
+      (outline (path signal 150  -13970 8890  13970 8890))
+      (outline (path signal 150  13970 -8890  -13970 -8890))
+      (pin Round[A]Pad_1524_um 4 11430 3810)
+      (pin Round[A]Pad_1524_um 5 11430 -3810)
+      (pin Round[A]Pad_1524_um 6 11430 -6553.2)
+      (pin Round[A]Pad_1524_um 3 11430 6553.2)
+      (pin Round[A]Pad_1524_um 2 -11430 -6756.4)
+      (pin Round[A]Pad_1524_um 1 -11430 6756.4)
+    )
     (padstack Round[A]Pad_1524_um
       (shape (circle F.Cu 1524))
       (shape (circle B.Cu 1524))
@@ -336,10 +336,10 @@
   )
   (network
     (net "Net-(J1-Pad1)"
-      (pins U1-2 J1-1)
+      (pins J1-1 U1-2)
     )
     (net "Net-(J1-Pad2)"
-      (pins U1-1 J1-2)
+      (pins J1-2 U1-1)
     )
     (net "Net-(LS1-Pad1)"
       (pins LS1-1 M1-16)
@@ -358,7 +358,7 @@
       (pins SW5-1 U1-6)
     )
     (net VCC
-      (pins U1-3 U2-8 M1-12)
+      (pins U2-8 M1-12 U1-3)
     )
     (net "Net-(U2-Pad1)"
       (pins U2-1)
@@ -409,10 +409,10 @@
       (pins J1-4 M1-18)
     )
     (net "Net-(A1-Pad1)"
-      (pins U1-4 A1-1)
+      (pins A1-1 U1-4)
     )
     (net "Net-(A1-Pad2)"
-      (pins U1-5 A1-2)
+      (pins A1-2 U1-5)
     )
     (class kicad_default "" D+ "D-" GND "Net-(A1-Pad1)" "Net-(A1-Pad2)" "Net-(J1-Pad1)"
       "Net-(J1-Pad2)" "Net-(LS1-Pad1)" "Net-(LS1-Pad2)" "Net-(M1-Pad1)" "Net-(M1-Pad10)"
