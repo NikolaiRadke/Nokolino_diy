@@ -1,4 +1,4 @@
-/* NOKOlino V1.0 27.01.2018 - Nikolai Radke
+/* NOKOlino V1.0 09.03.2018 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
@@ -34,8 +34,8 @@
 //#define Breadboard                // Breadboard or PCB?
 
 // Voice set selection
-#define Set_8MBit_16MBit
-//#define Set_32MBit
+//#define Set_8MBit_16MBit
+#define Set_32MBit
 //#define Set_own
 
 #ifdef Set_8MBit_16MBit
@@ -56,7 +56,7 @@
   #define maxInput     50           // Max. value from busy line. 
 #else
   #define Offset       0.6
-  #define maxInput     1
+  #define maxInput     0
 #endif
 
 // Optional - comment out with // to disable
@@ -171,25 +171,15 @@ while(1)
   #endif
 }}
 
-void check_busy()
-{
-  uint8_t busy_counter=0;
-  attiny_sleep();
-  while (analogRead(Busy)>maxInput)  // Check busy line
-  {
-    attiny_sleep();                  // Wait 128ms
-    if (busy_counter>maxBusy) break; // Check timeout - checking inside while()
-    busy_counter++;                  // didn't work well, however.
-  }
-}
-
 void JQ6500_play(uint8_t v)          // Plays MP3 number v
 {
   mp3.write("\x7E\x04\x03\x01");     // Play file number v
   mp3.write(v);
   mp3.write("\xEF");
-  check_busy();                      // Check busy line
+  attiny_sleep();
+  while (analogRead(Busy)>maxInput) attiny_sleep(); // Check busy
   mp3.write("\x7E\x02\x0A\xEF");     // Go back to sleep, JQ6500!
+  attiny_sleep();
 }
 
 void attiny_sleep()                  // Sleep to save power
