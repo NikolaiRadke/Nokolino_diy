@@ -34,8 +34,8 @@
 //#define Breadboard                // Breadboard or PCB?
 
 // Voice set selection
-//#define Set_8MBit_16MBit
-#define Set_32MBit
+#define Set_8MBit_16MBit
+//#define Set_32MBit
 //#define Set_own
 
 #ifdef Set_8MBit_16MBit
@@ -218,5 +218,6 @@ ISR(WDT_vect)                       // Set global flag
 {
   f_wdt=1; 
 }
+
 
 
