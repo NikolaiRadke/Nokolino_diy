@@ -1,10 +1,10 @@
-/* NOKOlino V1.0 12.03.2018 - Nikolai Radke
+/* NOKOlino V1.0 25.05.2017 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correctly.
  *  
- *  Flash-Usage: 3.724 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
+ *  Flash-Usage: 3.604 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
  *  
  *  Circuit:
  *  1: RST | PB5  free
@@ -24,60 +24,45 @@
 #include <avr/sleep.h>
 #include <avr/interrupt.h>
 #include <SoftwareSerial.h>
-#include <EEPROM.h>
 
 //--------------------------------------------------------------------------------
 // Configuation
-#define Time         10             // Say something every statistical 10 minutes
-#define Volume       25             // Volume 0-30 - 20-25 is recommended 
-
-//#define Breadboard                // Breadboard or PCB?
-
-// Voice set selection
-#define Set_8MBit_16MBit
-//#define Set_32MBit
-//#define Set_own
-
-#ifdef Set_8MBit_16MBit
-  #define Button_event 20           // Last button event number (20.mp3)
-  #define Time_event   69           // Last time event number (69.mp3)
-#endif
-#ifdef Set_32MBit
-  #define Button_event 40
-  #define Time_event   163
-#endif
-#ifdef Set_own
-  #define Button_event 0
-  #define Time_event   0
-#endif
-
-#ifdef Breadboard
-  #define Offset       0.4          // Battery measuring error
-  #define maxInput     50           // Max. value from busy line. 
-#else
-  #define Offset       0.6
-  #define maxInput     0
-#endif
+#define Time      10                // Say something every statistical 10 minutes
+#define Volume    25                // Volume 0-30 - 20-25 is recommended 
+#define ATtiny85                    // Select Microcontroller
+//#define ATtiny45
 
 // Optional - comment out with // to disable
-#define Batterywarning             // NOKOlino gives a warning when battery is low
+#define Batterywarning              // NOKOlino gives a warning when battery is low
 //---------------------------------------------------------------------------------
 
 // Optional battery warning
-#define minCurrent   3.50 +Offset   // Low power warning current + measuring error
+#define minCurrent   3.50 +Offset   // Low power warning current + Measuring error
 #define battLow      3.30 +Offset   // Minimal voltage before JQ6500 fails
+#define Offset       0.6            // Measuring error | Breadboard: 0.4, PCB: 0.6
+
+// Debugging
+#define maxInput     1              // Max. value of analogRead from busy line
+#define maxBusy      70             // x128mseconds to timeout busy check - 70 = 9s
 
 // Hardware pins
 #define TX      0
 #define RX      1
 #define Busy    2
 
+// Define EEPROM size
+#ifdef Attiny85 
+  #define max_address 253
+#else
+  #define max_address 125
+#endif
+
 // ADC and BOD
 #ifndef cbi
-  #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif
 #ifndef sbi
-  #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 #define BODS 7                       // BOD sleep bit in MCUCR
 #define BODSE 2                      // BOD sleep enable bit in MCUCR
@@ -121,21 +106,15 @@ init();
 
   // Randomize number generator
   address=eeprom_read_word(0);       // Read EEPROM address
-  if ((address<2) || (address>(EEPROM.length()-3)))             
-  {                                  // Initialize EEPROM and size for first use or after end of cycle
-    address = 2;                     // Starting address
-    eeprom_write_word(0,address);    // Write starting address
-    eeprom_write_word(address,0);    // Write seed 0
-  }
   seed=eeprom_read_word(address);    // Read seed
+  randomSeed(seed);
+  seed++;
   if (seed>900)                      // After 900 write-cyles move to another address
   {                                  // to keep the EEPROM alive
     seed=0;
-    address+=2;
+    (address>max_address)? address=2:address+=2;
     eeprom_write_word(0,address);
   }
-  randomSeed(seed);                  // Randomize
-  seed++;                            // New seed
   eeprom_write_word(address,seed);   // Save new seed for next startup
 }
 
@@ -145,8 +124,8 @@ while(1)
   // Wait for button or time and go to sleep - ~8 times/second         
   if (!low) 
   {
-    if (!(PINB & (1<<PB2))) JQ6500_play(random(0,Button_event+1));      // Button event
-    else if (random(0,Time*60*8)==1) JQ6500_play(random(Button_event+1,Time_event+1)); // Time event
+    if (!(PINB & (1<<PB2))) JQ6500_play(random(0,21));      // Button event
+    else if (random(0,Time*60*8)==1) JQ6500_play(random(21,69)); // Time event
     else attiny_sleep();
   }
   
@@ -158,8 +137,8 @@ while(1)
     vref=1024*1.1f/(double)current;
     if (vref<=minCurrent)            // Current below minimum
     {
-      if (vref<=battLow) low=true;   // Power too low for JQ6500
-      else JQ6500_play(Time_event+1);// NOKOLINO says "Beep"
+      if (vref<=battLow) low=true;   // Power to low for JQ6500
+      else JQ6500_play(70);          // NOKOLINO says "Beep"
     }
     else low=false;
     counter=400;                     // Every minute, 50x 128ms + some sleeping ms
@@ -168,16 +147,25 @@ while(1)
   #endif
 }}
 
-void JQ6500_play(uint8_t f)          // Plays MP3 number f
+void check_busy()
 {
-  attiny_sleep();                    // Without pause, pull-up messes the busy signal
-  mp3.write("\x7E\x04\x03\x01");     // Play file number f
-  mp3.write(f);
+  uint8_t busy_counter=0;
+  attiny_sleep();
+  while (analogRead(Busy)>maxInput)  // Check busy line
+  {
+    attiny_sleep();                  // Wait 128ms
+    if (busy_counter>maxBusy) break; // Check timeout - checking inside while()
+    busy_counter++;                  // didn't work well, however.
+  }
+}
+
+void JQ6500_play(uint8_t v)          // Plays MP3 number v
+{
+  mp3.write("\x7E\x04\x03\x01");     // Play file number v
+  mp3.write(v);
   mp3.write("\xEF");
-  attiny_sleep();
-  while (analogRead(A2)>maxInput) attiny_sleep(); // Check busy
+  check_busy();                      // Check busy line
   mp3.write("\x7E\x02\x0A\xEF");     // Go back to sleep, JQ6500!
-  attiny_sleep();
 }
 
 void attiny_sleep()                  // Sleep to save power
@@ -216,10 +204,5 @@ ISR(WDT_vect)                       // Set global flag
 {
   f_wdt=1; 
 }
-
-
-
-
-
 
 
