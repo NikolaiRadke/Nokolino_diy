@@ -7,6 +7,8 @@
  * notice you can do whatever you want with this stuff. If we meet
  * some day, and you think this stuff is worth it, you can buy me a
  * beer in return.
+ *
+ * Modified for NOKOLino with 32MBit flash size: FLASHSIZE 0x400000
  */
 
 #include <stdint.h>
@@ -25,7 +27,7 @@
 #include <errno.h>
 #include <glob.h>
 
-#define FLASHSIZE 0x200000 /* 2MiB   */
+#define FLASHSIZE 0x400000 /* 4MiB   */
 #define BASE       0x40000 /* 256kiB */
 #define MAXSIZE (FLASHSIZE - BASE)
 
