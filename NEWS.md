@@ -1,6 +1,7 @@
 # Newsblog
 
 ## 2018  
+* **12.03.2018** New Firmware **1.0-120318**: NOKOlino is now talking constantly while button is pressed.  
 * **08.03.2018** Fixed flash tool for 32MBit MP3 modules.  
 * **27.01.2018** New firmware **1.0-270118**:  
 Enhancement: Using EEPROM.length() makes ATtiny selection obsolete.  
