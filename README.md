@@ -56,11 +56,9 @@ NOKO/
 |       Source documents for gEDA.
 |
 └── src/
-    ATtiny sketches
-    ├── NOKOlino/
-    |   Standard version. Full featured. Take this one.
-    └── NOKOlino_easy/
-        Easy-to-understand learning version. 
+    ATtiny sketch
+    └── NOKOlino/
+        One file, no libraries, no frills. Just NOKOlino. 
 ```
 ### Let's get started!
 
