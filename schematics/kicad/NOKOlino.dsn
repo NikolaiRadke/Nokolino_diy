@@ -37,8 +37,8 @@
       (place LS1 163250 -107900 front 0 (PN Speaker))
     )
     (component "Connectors_JST:JST_EH_S02B-EH_02x2.50mm_Angled"
-      (place SW5 146800 -95000 front 0 (PN On/Off))
-      (place A1 175750 -103650 front 270 (PN Akku))
+      (place SW5 175700 -121550 front 270 (PN On/Off))
+      (place A1 180200 -98800 front 270 (PN Akku))
     )
     (component "Housings_DIP:DIP-8_W7.62mm"
       (place U2 142950 -138250 front 180 (PN "ATTINY85-20PU"))
@@ -50,7 +50,7 @@
       (place SW4 134700 -141500 front 0 (PN SW4))
     )
     (component "Connectors_JST:JST_EH_S04B-EH_04x2.50mm_Angled"
-      (place J1 175700 -117250 front 270 (PN USB))
+      (place J1 175700 -107700 front 270 (PN USB))
     )
     (component NOKOlino:NOKOlino_logo
       (place G*** 161750 -104250 back 0 (PN LOGO))
