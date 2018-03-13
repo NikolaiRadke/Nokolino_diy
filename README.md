@@ -1,6 +1,6 @@
 # ![NOKO](http://www.nikolairadke.de/NOKOlino/nokolino_klein.png) NOKOlino
 
-The ATTiny-based litte brother of NOKO. Tiny and cute. And everyone is invited to **contribute**. NOKOlino is for everyone. Right now, me and some contributers are close to finish a PCB for easy assembling. Stay tuned! What's new? See the [newsblog](https://github.com/NikolaiRadke/NOKOlino/tree/master/NEWS.md).  
+The ATTiny-based litte brother of NOKO. Tiny and cute. And everyone is invited to **contribute**. NOKOlino is for everyone. Right now, the PCB is finished. I will provide the Gerber-Files in this GitHub, but everyone can purchase a complete kit via Heise Verlag! Stay tuned! What's new? See the [newsblog](https://github.com/NikolaiRadke/NOKOlino/tree/master/NEWS.md).  
 
 ![NOKOlino light blue](http://www.nikolairadke.de/NOKOlino/nokolino_wiki.png)
   
@@ -56,11 +56,9 @@ NOKO/
 |       Source documents for gEDA.
 |
 └── src/
-    ATtiny sketches
-    ├── NOKOlino/
-    |   Standard version. Full featured. Take this one.
-    └── NOKOlino_easy/
-        Easy-to-understand learning version. 
+    ATtiny sketch
+    └── NOKOlino/
+        One file, no libraries, no frills. Just NOKOlino. 
 ```
 ### Let's get started!
 

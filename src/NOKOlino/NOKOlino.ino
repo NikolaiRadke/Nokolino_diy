@@ -1,4 +1,4 @@
-/* NOKOlino V1.0 09.03.2018 - Nikolai Radke
+/* NOKOlino V1.0 12.03.2018 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
@@ -66,9 +66,6 @@
 // Optional battery warning
 #define minCurrent   3.50 +Offset   // Low power warning current + measuring error
 #define battLow      3.30 +Offset   // Minimal voltage before JQ6500 fails
-
-// Debugging
-#define maxBusy      70             // x128 mseconds to timeout busy check - 70 = 9s
 
 // Hardware pins
 #define TX      0
@@ -171,13 +168,14 @@ while(1)
   #endif
 }}
 
-void JQ6500_play(uint8_t v)          // Plays MP3 number v
+void JQ6500_play(uint8_t f)          // Plays MP3 number f
 {
-  mp3.write("\x7E\x04\x03\x01");     // Play file number v
-  mp3.write(v);
+  attiny_sleep();                    // Without pause, pull-up messes the busy signal
+  mp3.write("\x7E\x04\x03\x01");     // Play file number f
+  mp3.write(f);
   mp3.write("\xEF");
   attiny_sleep();
-  while (analogRead(Busy)>maxInput) attiny_sleep(); // Check busy
+  while (analogRead(A2)>maxInput) attiny_sleep(); // Check busy
   mp3.write("\x7E\x02\x0A\xEF");     // Go back to sleep, JQ6500!
   attiny_sleep();
 }
@@ -218,6 +216,10 @@ ISR(WDT_vect)                       // Set global flag
 {
   f_wdt=1; 
 }
+
+
+
+
 
 
 
