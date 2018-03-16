@@ -110,6 +110,7 @@ usage(void)
 	   "\n"
 	   "Options:\n"
 	   "  -d device   SCSI generic device or file to write to (default: autodetect)\n"
+       "  -l          Look for connected device \n"
 	   "  -r          write a single file in raw mode without creating a file system\n"
 	   "  -o offset   default: 0x40000\n"
 	   "  -s prefix   save the content of the pseudo file system on the device\n"
@@ -254,7 +255,7 @@ jq_find(const char *pattern)
     if (ret != 0) {
 	return NULL;
     }
-    for (i = 0; i < gb.gl_pathc; i++) {
+    for (i = 0; i <= gb.gl_pathc; i++) {
 	if (jq_identify(gb.gl_pathv[i])) {
 	    devname = strdup(gb.gl_pathv[i]);
 	    break;
@@ -278,7 +279,7 @@ main(int argc, char **argv)
 	usage();
     }
     
-    while ((opt = getopt(argc, argv, "d:o:rs:fh")) != -1) {
+    while ((opt = getopt(argc, argv, "d:o:rs:fh:l")) != -1) {
 	switch (opt) {
 	case 'd':
 	    device = optarg;
@@ -299,6 +300,13 @@ main(int argc, char **argv)
 	case 's':
 	    errx(1, "-%c: Option not implemented.", opt);
 	    break;
+    case 'l':
+        device = jq_find(device ? device : "/dev/sg*");
+	    if (device == NULL) {
+	        errx(1, "Cannot identify a JQ6500 device.");
+	    }
+	    fprintf(stderr, "Found a JQ6500 module on %s.\n", device);
+        return 0;
 	case 'h':
 	default:
 	    usage();
