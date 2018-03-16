@@ -1,6 +1,7 @@
 # Newsblog
 
 ## 2018  
+* **16.03.2018** Finished a JQ6500 rescue tool! See [my new repository](https://github.com/NikolaiRadke/JQ6500-rescue-tool).  
 * **12.03.2018** New Firmware **1.0-120318**: NOKOlino is now talking constantly while button is pressed.  
 * **08.03.2018** Fixed flash tool for 32MBit MP3 modules.  
 * **22.03.2018** NOKOlino appears in the german [Make Magazin](https://www.heise.de/select/make/2018/1/1519698748803933)!  
