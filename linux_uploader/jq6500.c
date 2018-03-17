@@ -1,7 +1,7 @@
 /*
  * jq6500 - Program the SPI flash of a JQ6500 MP3 player module.
  *
- * Copyright (C) 2017 Reinhard Max <reinhard@m4x.de>
+ * Copyright (C) 2018 Reinhard Max <reinhard@m4x.de>
  *
  * "THE BEER-WARE LICENSE" (Revision 42): As long as you retain this
  * notice you can do whatever you want with this stuff. If we meet
@@ -9,9 +9,11 @@
  * beer in return.
  *
  * Modified for NOKOLino with 32MBit flash size: FLASHSIZE 0x400000
+ * and -l option to show connected devices.
  */
 
 #include <stdint.h>
+#include <scsi/scsi.h>
 #include <scsi/sg.h>
 #include <unistd.h>
 #include <endian.h>
@@ -26,14 +28,15 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <glob.h>
+#include <stdarg.h>
 
-#define FLASHSIZE 0x400000 /* 4MiB   */
+#define FLASHSIZE 0x400000 /* 2MiB   */
 #define BASE       0x40000 /* 256kiB */
 #define MAXSIZE (FLASHSIZE - BASE)
 
-#define ERASE 0xfbd8
-#define WRITE 0xfbd9
-#define READ  0xfd03
+#define JQ_ERASE 0xfbd8
+#define JQ_WRITE 0xfbd9
+#define JQ_READ  0xfd03
 #define BLKSZ 0x1000
 #define TIMEOUT 30000
 
@@ -46,7 +49,18 @@ struct jqcmd {
 } __attribute__((packed));
 
 uint8_t buf[FLASHSIZE];
-uint8_t force = 0;
+int force = 0;
+int debugging = 0;
+
+void
+debug(const char* format, ...) {
+    if (debugging) {
+	va_list args;
+	va_start(args, format);
+	vfprintf(stderr, format, args);
+	va_end(args);
+    }
+}
 
 off_t
 filesize(char *file)
@@ -110,12 +124,14 @@ usage(void)
 	   "\n"
 	   "Options:\n"
 	   "  -d device   SCSI generic device or file to write to (default: autodetect)\n"
-       "  -l          Look for connected device \n"
+       "  -l          Look for a connected device \n"
 	   "  -r          write a single file in raw mode without creating a file system\n"
 	   "  -o offset   default: 0x40000\n"
 	   "  -s prefix   save the content of the pseudo file system on the device\n"
 	   "              to a set of files named prefix-dirno-fileno\n"
-	   "  -f          force operation (disables sanity checks, use with care!)\n");
+	   "  -f          force operation (disables sanity checks, use with care!)\n"
+	   "  -D          print additional debugging information\n"
+	   );
     
     exit(1);
 }
@@ -176,7 +192,7 @@ jqwrite(char *device, uint8_t *buf, int offset, int size)
 	loadbar(i, size);
 
 	memset(&cmd, 0, sizeof(cmd));
-	cmd.j_cmd = htobe16(ERASE);
+	cmd.j_cmd = htobe16(JQ_ERASE);
 	cmd.j_off = htobe32(offset + i);
 
 	memset(&hdr, 0, sizeof(hdr));
@@ -192,7 +208,7 @@ jqwrite(char *device, uint8_t *buf, int offset, int size)
 	}
 
 	memset(&cmd, 0, sizeof(cmd));
-	cmd.j_cmd = htobe16(WRITE);
+	cmd.j_cmd = htobe16(JQ_WRITE);
 	cmd.j_off = htobe32(offset + i);
 	cmd.j_len = htobe32(BLKSZ);
 
@@ -220,11 +236,15 @@ jq_identify(char *devname)
 {
     int dev;
     struct sg_io_hdr hdr;
-    char buf[32];
-    uint8_t cmd[6] = {0x12, 0, 0, 0, sizeof(buf), 0};
+    char buf[36];
+    char vendor[9], product[17], revision[5];
+    uint8_t cmd[6] = {INQUIRY, 0, 0, 0, sizeof(buf), 0};
     
+    debug("Identifying %s ...\n", devname);
+
     dev = open(devname, O_RDONLY);
     if (dev < 0) {
+	debug("  open failed: %s\n", strerror(errno));
 	return 0;
     }
 
@@ -241,7 +261,19 @@ jq_identify(char *devname)
     }
     close(dev);
 
-    return !memcmp(buf + 8, "YULIN    PROGRAMMER     ", 24);
+    strncpy(vendor, buf + 8, sizeof(vendor)-1);
+    vendor[sizeof(vendor)-1] = '\0';
+    strncpy(product, buf + 16, sizeof(product)-1);
+    product[sizeof(product)-1] = '\0';
+    strncpy(revision, buf + 32, sizeof(revision)-1);
+    revision[sizeof(revision)-1] = '\0';
+    
+    debug("  VENDOR='%s'\n", vendor);
+    debug("  PRODUCT='%s'\n", product);
+    debug("  REVISION='%s'\n", revision);
+    
+    return (strcmp(vendor, "YULIN   ") == 0 &&
+	    strcmp(product, " PROGRAMMER     ") == 0);
 }
 
 char *
@@ -255,7 +287,7 @@ jq_find(const char *pattern)
     if (ret != 0) {
 	return NULL;
     }
-    for (i = 0; i <= gb.gl_pathc; i++) {
+    for (i = 0; i < gb.gl_pathc; i++) {
 	if (jq_identify(gb.gl_pathv[i])) {
 	    devname = strdup(gb.gl_pathv[i]);
 	    break;
@@ -279,7 +311,7 @@ main(int argc, char **argv)
 	usage();
     }
     
-    while ((opt = getopt(argc, argv, "d:o:rs:fh:l")) != -1) {
+    while ((opt = getopt(argc, argv, "d:o:rs:fhDl")) != -1) {
 	switch (opt) {
 	case 'd':
 	    device = optarg;
@@ -299,6 +331,9 @@ main(int argc, char **argv)
 	    break;
 	case 's':
 	    errx(1, "-%c: Option not implemented.", opt);
+	    break;
+	case 'D':
+	    debugging = 1;
 	    break;
     case 'l':
         device = jq_find(device ? device : "/dev/sg*");
@@ -368,4 +403,3 @@ main(int argc, char **argv)
 /* mode: c           */
 /* c-basic-offset: 4 */
 /* End:              */
-
