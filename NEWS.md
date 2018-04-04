@@ -1,6 +1,7 @@
 # Newsblog
 
 ## 2018  
+* **04.04.2018** My hoster was offline for more than two weeks. I moved to a new one. The graphics in the GitHub will be back soon. What a waste of time...  
 * **16.03.2018** Finished a JQ6500 rescue tool! See [my new repository](https://github.com/NikolaiRadke/JQ6500-rescue-tool).  
 * **12.03.2018** New Firmware **1.0-120318**: NOKOlino is now talking constantly while button is pressed.  
 * **08.03.2018** Fixed flash tool for 32MBit MP3 modules.  
