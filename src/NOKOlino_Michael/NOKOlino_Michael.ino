@@ -34,8 +34,8 @@
 //#define Breadboard                // Breadboard or PCB?
 
 // Voice set selection
-//#define Set_8MBit_16MBit
-#define Set_32MBit
+#define Set_8MBit_16MBit
+//#define Set_32MBit
 //#define Set_own
 
 #ifdef Set_8MBit_16MBit
@@ -113,11 +113,11 @@ init();
   mp3.write("\x7E\x03\x06");
   mp3.write(Volume);                 // Set volume
   mp3.write("\xEF"); 
-  setup_watchdog(3);
   attiny_sleep();                    // Sleep 128ms
   mp3.write("\x7E\x03\x11\x04\xEF"); // No loop
   attiny_sleep();                    // Sleep 128ms
   mp3.write("\x7E\x02\x0A\xEF");     // Sleep, JQ6500!
+  setup_watchdog(3);
 
   // Randomize number generator
   address=eeprom_read_word(0);       // Read EEPROM address
