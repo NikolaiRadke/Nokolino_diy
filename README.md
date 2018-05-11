@@ -42,13 +42,19 @@ NOKO/
 |       Source documents for Scribus with all illustrations and fonts.
 |
 ├── mp3/
-|   Voiceset for NOKOlino in German. English needed? Contribute!
-|   ├── mp3_8MBit/
-|   |   Low qualitiy files for the 1MB-JQ6500.
-|   ├── mp3_16MBit/
-|   |   High quality files for the 2MB-JQ6500.
-|   └── mp3_32MBit/
-|       Enhanched voice set for the 4MB-JQ6500.  
+|   Voice set for NOKOlino/NOKOlina in German. English needed? Contribute!
+|   ├── female/
+|   |   Female voice for NOKOlina.
+|   |    └── mp3_32MBit/
+|   |        Voice set for the 4MB-JQ6500. 
+|   └── male/
+|       Male voice for NOKOlino.
+|       ├── mp3_8MBit/
+|       |   Low qualitiy files for the 1MB-JQ6500.
+|       ├── mp3_16MBit/
+|       |   High quality files for the 2MB-JQ6500.
+|       └── mp3_32MBit/
+|           Enhanched voice set for the 4MB-JQ6500.  
 |
 ├── schematics/
 |   The schematics for the NOKOlino parts, the NOKO sewing pattern and shopping list.
