@@ -7,8 +7,8 @@ Copy these mp3s on the JQ6500 module. Strictly observe the sequence!
 detailed instructions.  
 
 **Windows** users can use the (chinese) interface. See this [instructions](http://sparks.gogo.co.nz/jq6500/index.html), written by James Sleeman. **Linux** and **Mac** users should try the [uploading tool](https://github.com/NikolaiRadke/NOKOlino/tree/master/linux_uploader), written by Max Reinhard.  
-  
-**32MBit:**
+    
+ **8Mbit and 16MBit:**  
   
 | Number  | Assignment               |
 | --------|-------------------------:|
@@ -16,7 +16,7 @@ detailed instructions.
 | 021-069 | Time based events        |
 | 070     | BEEP battery warning     |
   
-  **8Mbit and 16MBit:**
+ **32MBit:**  
   
 | Number  | Assignment               |
 | --------|-------------------------:|
