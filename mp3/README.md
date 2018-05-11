@@ -1,14 +1,13 @@
 # Voice set for NOKOlino - German
 
-There are three sets: One for the 16MBit = **2MByte** variant of the JQ6500, and one for the 8MBit = **1MByte** variant in lower quality and, brand new, a 32MBit **4 MByte** Variant with more sound files, for newer 32MBit-JQ6500 modules.  
+There are four sets: Three **male** sets, one for the 16MBit = **2MByte** variant of the JQ6500, and one for the 8MBit = **1MByte** variant in lower quality and a 32MBit **4 MByte** variant with more sound files, for newer 32MBit-JQ6500 modules. The fourth set is a 32MBit **4 MByte** **female** variant, brand new for *NOKOlina*.  
 
 Copy these mp3s on the JQ6500 module. Strictly observe the sequence!
-021.mp3 must be copied as the 21st file. See the [Wiki](https://github.com/NikolaiRadke/NOKOlino/wiki/MP3s-aufspielen) for more 
-detailed instructions.  
+021.mp3 must be copied as the 21st file. See the [Wiki](https://github.com/NikolaiRadke/NOKOlino/wiki/MP3s-aufspielen) for more detailed instructions.  
 
 **Windows** users can use the (chinese) interface. See this [instructions](http://sparks.gogo.co.nz/jq6500/index.html), written by James Sleeman. **Linux** and **Mac** users should try the [uploading tool](https://github.com/NikolaiRadke/NOKOlino/tree/master/linux_uploader), written by Max Reinhard.  
     
- **8Mbit and 16MBit:**  
+ **8Mbit and 16MBit: (male only)**  
   
 | Number  | Assignment               |
 | --------|-------------------------:|
@@ -16,7 +15,7 @@ detailed instructions.
 | 021-069 | Time based events        |
 | 070     | BEEP battery warning     |
   
- **32MBit:**  
+ **32MBit: (male and female)**  
   
 | Number  | Assignment               |
 | --------|-------------------------:|
@@ -24,8 +23,8 @@ detailed instructions.
 | 041-163 | Time based events        |
 | 164     | BEEP battery warning     |
   
-The voice has been spoken by my fellow actor [Carsten Caniglia](https://filmmakers.de/carsten-caniglia). Why? 
-He has done a great job - moreover I don't want to listen to my own voice every day, especially when development takes more than a year! (Ian said I sound really weird in real life. Thanks, mate.)  
+The male voice has been spoken by my fellow actor [Carsten Caniglia](https://filmmakers.de/carsten-caniglia). Why? 
+He has done a great job - moreover I don't want to listen to my own voice every day, especially when development takes more than a year! (Ian said I sound really weird in real life. Thanks, mate.). The female voice was spoken by my fellow actress [Norma Anthes](http://norma-anthes.de), thank you, lady!    
 
 ### Your own voice set  
   
