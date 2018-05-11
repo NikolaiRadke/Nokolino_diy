@@ -29,7 +29,7 @@
 //--------------------------------------------------------------------------------
 // Configuation
 #define Time         10             // Say something every statistical 10 minutes
-#define Volume       25             // Volume 0-30 - 20-25 is recommended 
+#define Volume       20             // Volume 0-30 - 20 is recommended 
 
 //#define Breadboard                // Breadboard or PCB?
 
