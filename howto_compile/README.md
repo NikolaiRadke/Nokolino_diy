@@ -1,6 +1,6 @@
 # Compiling instructions for NOKOlino
 
-In order to flash your ATtiny with the NOKOlino-sketch, you need the **Arduino-IDE** (1.6.6 odr higher), with installed **ATtiny-support** and an **Arduino** connected to your microcontroller.
+In order to flash your ATtiny with the NOKOlino-sketch, you need the **Arduino-IDE** (1.6.6 or higher), with installed **ATtiny-support** and an **Arduino** connected to your microcontroller.
 
 ### Preparing the IDE  
  
