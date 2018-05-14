@@ -1,6 +1,7 @@
 # Newsblog
 
 ## 2018  
+* **14.05.2018** See NOKO and me at the Maker Faire 2018 in Berlin: 25.10.2018-28.10.2018, FEZ!  
 * **12.05.2018** The new [NOKOlino_2 repository](https://github.com/NikolaiRadke/NOKOlino_2) ist finished. I will still provide support for the old version. Promised.  
 * **11.05.2018** The new female voice set for NOKOlina is finished.  
 * **04.04.2018** My hoster was offline for more than two weeks. I moved to a new one. The graphics in the GitHub will be back soon. What a waste of time...  
