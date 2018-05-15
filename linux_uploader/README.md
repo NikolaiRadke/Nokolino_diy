@@ -6,7 +6,8 @@ It is quite easy with this command line tool, written by [Reinhard Max](https://
 2. If not, compile it by yourself, just by typing ``` make ```. 
 3. Try again.
 4. Connect your JQ6500 module to your system with a micro USB cable.  
-5. Upload your files by typing   
+5. Test your device by typing  ``` ./jq6500 -S ```. The tool will tell you the detected flash size.  
+6. Upload your files by typing   
   ``` ./jq6500 ../mp3/male/mp3_8MBit/* ```(1 MByte devices)  or  
   ``` ./jq6500 -f ../mp3/male/mp3_8MBit/* ``` (2 MByte devices) or  
   ``` ./jq6500 ../mp3/male/mp3_32MBit/* ``` (4 MByte devices) or  
