@@ -1,6 +1,7 @@
 # Newsblog
 
 ## 2018  
+* **15.05.2018** Updated the upload tool for the JQ6500 mp3 module. Note that it now needs the -W parameter to write files.  
 * **14.05.2018** See NOKO and me at the Maker Faire 2018 in Berlin: 25.10.2018-28.10.2018, FEZ!  
 * **12.05.2018** The new [NOKOlino_2 repository](https://github.com/NikolaiRadke/NOKOlino_2) ist finished. I will still provide support for the old version. Promised.  
 * **11.05.2018** The new female voice set for NOKOlina is finished.  
