@@ -1,4 +1,4 @@
-# Uploading Files on the JQ6500 with Linux
+# Uploading files on the JQ6500 with Linux
 
 It is quite easy with this command line tool, written by [Reinhard Max](https://chiselapp.com/user/rmax/repository/jq6500).  I added a precompiled version (64 Bit). It is free, but it is also *beerware*... ;-)  
 
@@ -14,4 +14,14 @@ It is quite easy with this command line tool, written by [Reinhard Max](https://
   ``` ./jq6500 -W ../mp3/demale/mp3_8MBit/* ``` (4 MByte devices, female voice set).    
   
 If your MP3 files are in another directory, modify the last argument.  
+
+## Repairing a JQ6500 without Windows software
+  
+Strangely, some modules come without the integrated Windows software. If you are fond of nice Chinese frontends or have a friend in need without Linux, the tool can fix the module.
+
+1. Like above, check if the tool is running correctly.  
+2. Connect your JQ6500 module to your system with a micro USB cable.  
+3. Just type ``` make flash ```. 
+
+That's it. You can now use your module with Windows.  
 
