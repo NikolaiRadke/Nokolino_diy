@@ -1,17 +1,15 @@
 /*
  * jq6500 - Program the SPI flash of a JQ6500 MP3 player module.
  *
- * Copyright (C) 2018 Reinhard Max <reinhard@m4x.de>
+ * Copyright (C) 2017 Reinhard Max <reinhard@m4x.de>
  *
  * "THE BEER-WARE LICENSE" (Revision 42): As long as you retain this
  * notice you can do whatever you want with this stuff. If we meet
  * some day, and you think this stuff is worth it, you can buy me a
  * beer in return.
- *
- * Modified for NOKOLino with 32MBit flash size: FLASHSIZE 0x400000
- * and -l option to show connected devices.
  */
 
+#define _GNU_SOURCE
 #include <stdint.h>
 #include <scsi/scsi.h>
 #include <scsi/sg.h>
@@ -30,9 +28,7 @@
 #include <glob.h>
 #include <stdarg.h>
 
-#define FLASHSIZE 0x400000 /* 2MiB   */
 #define BASE       0x40000 /* 256kiB */
-#define MAXSIZE (FLASHSIZE - BASE)
 
 #define JQ_ERASE 0xfbd8
 #define JQ_WRITE 0xfbd9
@@ -48,13 +44,16 @@ struct jqcmd {
     uint16_t j_bar;
 } __attribute__((packed));
 
-uint8_t buf[FLASHSIZE];
+int flashsize = 0x1000000; /* 16Mib */
+int maxsize;
+uint8_t *buf;
 int force = 0;
-int debugging = 0;
+int verbosity = 1;
+int cmd = 0;
 
 void
-debug(const char* format, ...) {
-    if (debugging) {
+p(int level, const char* format, ...) {
+    if (verbosity >= level) {
 	va_list args;
 	va_start(args, format);
 	vfprintf(stderr, format, args);
@@ -102,17 +101,17 @@ loadbar(unsigned int x, unsigned int n)
     float ratio    =  x/(float)n;
     int   c        =  ratio * w;
     
-    fprintf(stderr, "\r%7d (%3d%%) [", x, (int)(ratio*100));
-    for (i=0; i<c; i++) fprintf(stderr, "-");
-    for (i=c; i<w; i++) fprintf(stderr, " ");
-    fprintf(stderr, "]");
+    p(1, "\r%7d (%3d%%) [", x, (int)(ratio*100));
+    for (i=0; i<c; i++) p(1, "-");
+    for (i=c; i<w; i++) p(1, " ");
+    p(1, "]");
     fflush(stderr);
 }
 
 void
 usage(void)
 {
-    printf("Usage: jq6500 [OPTION]... [FILE]...\n"
+    printf("Usage: jq6500 <command> [OPTION]... [FILE]...\n"
 	   "\n"
 	   "Write files to an MP3 player based on the JQ6500 chip that is connected\n"
 	   "via USB. Files can be written in raw mode or as a simple file system which\n"
@@ -122,16 +121,23 @@ usage(void)
 	   "256kiB of the device or to flash an existing file system image with audio\n"
 	   "files.\n"
 	   "\n"
+	   "Commands:\n"
+	   "  -L          List available JQ6500 devices\n"
+	   "  -S          detect and print the size of the onboard flash chip\n"
+	   "  -R          read from flash\n"
+	   "  -W          write to flash\n"
+	   "  -E          erase flash\n"
+	   "\n"
 	   "Options:\n"
 	   "  -d device   SCSI generic device or file to write to (default: autodetect)\n"
-       "  -l          Look for a connected device \n"
-	   "  -r          write a single file in raw mode without creating a file system\n"
+	   "  -r          raw mode: read/write flash contents to/from a single file\n"
 	   "  -o offset   default: 0x40000\n"
-	   "  -s prefix   save the content of the pseudo file system on the device\n"
-	   "              to a set of files named prefix-dirno-fileno\n"
-	   "  -f          force operation (disables sanity checks, use with care!)\n"
-	   "  -D          print additional debugging information\n"
-	   );
+	   "  -s size     default: 4096 for read and erase, file size for write\n"
+	   "  -f          force operation (disables some sanity checks, use with care!)\n"
+	   "  -v level    set the verbosity level (default: 1)\n"
+	   "  -p          patch the detected size into config.ini of the given imag before flashing\n"
+	   "  -q          be quiet\n"
+	   "\n");
     
     exit(1);
 }
@@ -141,15 +147,21 @@ mkjqfs(int count, char **files, int offset)
 {
     int size, i, len;
     uint8_t *dir, *data;
-    memset(buf, 0xff, FLASHSIZE);
 
     dir = buf;
-    /* 2 for main dir, 1 for length of subdir, 2 for each file */
-    size = (2 + 1 + 2 * count) * sizeof(uint32_t);
+    /*
+     * 2 for main dir
+     * 2 for flash size
+     * 1 for length of subdir
+     * 2 for each file
+     */
+    size = (2 + 2 + 1 + 2 * count) * sizeof(uint32_t);
     data = dir + size;
 
     w32le(&dir, 1);		/* Number of Subdirs */
-    w32le(&dir, offset + 8);	/* Offset of first subdir */
+    w32le(&dir, offset + 16);	/* Offset of first subdir */
+    w32le(&dir, flashsize);     /* Flash size */
+    w32le(&dir, ~flashsize);    /* Inverse of the flash size */
     w32le(&dir, count);		/* Number of files in subdir 1 */
 
     for (i = 0; i < count; i++) {
@@ -157,8 +169,8 @@ mkjqfs(int count, char **files, int offset)
 	char *fname = files[i];
 	len = filesize(fname);
 	size += len;
-	if (!force && size >= MAXSIZE) {
-	    errx(1, "length %d exceeds maximum of %d\n", size, MAXSIZE);
+	if (!force && size >= maxsize) {
+	    errx(1, "length %d exceeds maximum of %d\n", size, maxsize);
 	}
 	fd = open(fname, O_RDONLY);
 	if (fd < 0) 
@@ -173,8 +185,74 @@ mkjqfs(int count, char **files, int offset)
     return size;
 }
 
+int
+jq_erase(int dev, int offset)
+{
+    struct jqcmd cmd;
+    struct sg_io_hdr hdr;
+    
+    memset(&cmd, 0, sizeof(cmd));
+    cmd.j_cmd = htobe16(JQ_ERASE);
+    cmd.j_off = htobe32(offset);
+    
+    memset(&hdr, 0, sizeof(hdr));
+    hdr.interface_id = 'S';
+    hdr.timeout = TIMEOUT;
+    hdr.cmdp = (unsigned char *) &cmd;
+    hdr.cmd_len = sizeof(cmd);
+    hdr.dxfer_direction = SG_DXFER_NONE;
+    
+    return ioctl(dev, SG_IO, &hdr);
+}
+
+int
+jq_write(int dev, uint8_t *buf, int offset, int size)
+{
+    struct jqcmd cmd;
+    struct sg_io_hdr hdr;
+
+    memset(&cmd, 0, sizeof(cmd));
+    cmd.j_cmd = htobe16(JQ_WRITE);
+    cmd.j_off = htobe32(offset);
+    cmd.j_len = htobe32(size);
+    
+    memset(&hdr, 0, sizeof(hdr));
+    hdr.interface_id = 'S';
+    hdr.timeout = TIMEOUT;
+    hdr.cmdp = (unsigned char *) &cmd;
+    hdr.cmd_len = sizeof(cmd);
+    hdr.dxfer_direction = SG_DXFER_TO_DEV;
+    hdr.dxferp = buf;
+    hdr.dxfer_len = size;
+    
+    return ioctl(dev, SG_IO, &hdr);
+}
+
+int
+jq_read(int dev, uint8_t *buf, int offset, int size)
+{
+    struct jqcmd cmd;
+    struct sg_io_hdr hdr;
+
+    memset(&cmd, 0, sizeof(cmd));
+    cmd.j_cmd = htobe16(JQ_READ);
+    cmd.j_off = htobe32(offset);
+    cmd.j_len = htobe32(size);
+    
+    memset(&hdr, 0, sizeof(hdr));
+    hdr.interface_id = 'S';
+    hdr.timeout = TIMEOUT;
+    hdr.cmdp = (unsigned char *) &cmd;
+    hdr.cmd_len = sizeof(cmd);
+    hdr.dxfer_direction = SG_DXFER_FROM_DEV;
+    hdr.dxferp = buf;
+    hdr.dxfer_len = size;
+    
+    return ioctl(dev, SG_IO, &hdr);
+}
+
 void
-jqwrite(char *device, uint8_t *buf, int offset, int size)
+jq_flash(char *device, uint8_t *buf, int offset, int size)
 {
     int dev, i;
 
@@ -182,52 +260,21 @@ jqwrite(char *device, uint8_t *buf, int offset, int size)
     if (dev < 0)
 	err(1, "cannot open device %s", device);
 
-    fprintf(stderr, "Uploading %d bytes...\n", size);
+    p(1, "uploading %d bytes at offset 0x%x ...\n", size, offset);
 
     for (i = 0; i < size; i += BLKSZ) {
 	
-	struct jqcmd cmd;
-	struct sg_io_hdr hdr;
-
 	loadbar(i, size);
-
-	memset(&cmd, 0, sizeof(cmd));
-	cmd.j_cmd = htobe16(JQ_ERASE);
-	cmd.j_off = htobe32(offset + i);
-
-	memset(&hdr, 0, sizeof(hdr));
-	hdr.interface_id = 'S';
-	hdr.timeout = TIMEOUT;
-	hdr.cmdp = (unsigned char *) &cmd;
-	hdr.cmd_len = sizeof(cmd);
-	hdr.dxfer_direction = SG_DXFER_NONE;
-
-	if (ioctl(dev, SG_IO, &hdr) < 0) {
-	     fprintf(stderr, "\n");
-	     err(1, "erase failed at offset %x", offset + i);
+	if (jq_erase(dev, offset + i)) {
+	    err(1, "erase failed at offset %x", offset + i);
 	}
 
-	memset(&cmd, 0, sizeof(cmd));
-	cmd.j_cmd = htobe16(JQ_WRITE);
-	cmd.j_off = htobe32(offset + i);
-	cmd.j_len = htobe32(BLKSZ);
-
-	memset(&hdr, 0, sizeof(hdr));
-	hdr.interface_id = 'S';
-	hdr.timeout = TIMEOUT;
-	hdr.cmdp = (unsigned char *) &cmd;
-	hdr.cmd_len = sizeof(cmd);
-	hdr.dxfer_direction = SG_DXFER_TO_DEV;
-	hdr.dxferp = buf + i;
-	hdr.dxfer_len = BLKSZ;
-	
-	if (ioctl(dev, SG_IO, &hdr) < 0) {
-	    fprintf(stderr, "\n");
+	if (jq_write(dev, buf + i, offset + i, BLKSZ)) {
 	    err(1, "\nwrite failed at offset %x", offset + i);
 	}
     }
     loadbar(size, size);
-    fprintf(stderr, "\n");
+    p(1, "\n");
     close(dev);
 }
 
@@ -235,17 +282,18 @@ int
 jq_identify(char *devname)
 {
     int dev;
+    int ret = 0;
     struct sg_io_hdr hdr;
     char buf[36];
     char vendor[9], product[17], revision[5];
     uint8_t cmd[6] = {INQUIRY, 0, 0, 0, sizeof(buf), 0};
     
-    debug("Identifying %s ...\n", devname);
+    p(3, "checking %s\n", devname);
 
     dev = open(devname, O_RDONLY);
     if (dev < 0) {
-	debug("  open failed: %s\n", strerror(errno));
-	return 0;
+	p(3, "  open failed on %s: %s\n", devname, strerror(errno));
+	goto error2;
     }
 
     memset(&hdr, 0, sizeof(hdr));
@@ -256,10 +304,10 @@ jq_identify(char *devname)
     hdr.dxfer_direction = SG_DXFER_FROM_DEV;
     hdr.dxfer_len = sizeof(buf);
     hdr.dxferp = buf;
-    if (ioctl(dev, SG_IO, &hdr) < 0) {
-	err(1, "INQUIRY failed");
+    if (ioctl(dev, SG_IO, &hdr) != 0) {
+	p(4, "  INQUIRY failed on %s: %s", devname, strerror(errno));
+	goto error1;
     }
-    close(dev);
 
     strncpy(vendor, buf + 8, sizeof(vendor)-1);
     vendor[sizeof(vendor)-1] = '\0';
@@ -268,12 +316,21 @@ jq_identify(char *devname)
     strncpy(revision, buf + 32, sizeof(revision)-1);
     revision[sizeof(revision)-1] = '\0';
     
-    debug("  VENDOR='%s'\n", vendor);
-    debug("  PRODUCT='%s'\n", product);
-    debug("  REVISION='%s'\n", revision);
+    p(4, "  VENDOR   = '%s'\n", vendor);
+    p(4, "  PRODUCT  = '%s'\n", product);
+    p(4, "  REVISION = '%s'\n", revision);
     
-    return (strcmp(vendor, "YULIN   ") == 0 &&
-	    strcmp(product, " PROGRAMMER     ") == 0);
+    ret = (strcmp(vendor, "YULIN   ") == 0 &&
+	   strcmp(product, " PROGRAMMER     ") == 0);
+
+ error1:
+    close(dev);
+    
+ error2: 
+    p(2, "found %s JQ6500 module on %s\n", ret ? "a" : "no", devname);
+    p(3, "\n");
+
+    return ret;
 }
 
 char *
@@ -290,38 +347,185 @@ jq_find(const char *pattern)
     for (i = 0; i < gb.gl_pathc; i++) {
 	if (jq_identify(gb.gl_pathv[i])) {
 	    devname = strdup(gb.gl_pathv[i]);
-	    break;
 	}
     }
     globfree(&gb);
 
+    if (devname == NULL) {
+	warnx("cannot find a JQ6500 module.");
+    }
+    if (verbosity < 2) {
+	p(1, "found a JQ6500 module on %s\n", devname);
+    } else {
+	p(1, "using %s\n", devname);
+    }
     return devname;
+}
+
+
+int
+powerof2(unsigned int v)
+{
+    return v && !(v & (v - 1));
+}
+
+/*
+ * Read the size from the modified jqfs, if it exists there but
+ * only accept it after some sanity tests.
+ */
+int
+jq_readsize(char *device)
+{
+    int dev;
+    uint32_t size;
+    union {
+	uint8_t bytes[8];
+	struct {
+	    uint32_t size;
+	    uint32_t check;
+	};
+    } sz;
+
+    dev = open(device, O_RDWR);
+    if (dev < 0)
+	err(1, "cannot open device %s", device);
+
+    jq_read(dev, (uint8_t*)&sz.bytes, 0x40008, 8);
+    close(dev);
+    size = le32toh(sz.size);
+
+    /* Sanity checks ... */
+    if (size != ~le32toh(sz.check)) return 0;
+    if (size < 0x100000) return 0;
+    if (!powerof2(size)) return 0;
+    
+    p(1, "flash size was saved on the module: %d MiB\n", size / 0x100000);
+    return size;
+}
+
+int
+jq_flashdetect(char *device, int offset)
+{
+    int dev;
+    int i;
+    int size;
+    int found = -1;
+    uint8_t bufa[BLKSZ];
+    uint8_t bufb[BLKSZ];
+    uint8_t nulls[BLKSZ];
+    uint8_t ffs[BLKSZ];
+    dev = open(device, O_RDWR);
+    if (dev < 0)
+	err(1, "cannot open device %s", device);
+
+    memset(nulls, 0, BLKSZ);
+    memset(ffs, 0xff, BLKSZ);
+
+    /*
+     * Search the first megabyte starting at offset for a block with
+     * non-trivial content.
+     */
+    for (i = offset; i < 1024 * 1024; i += BLKSZ) {
+	if (jq_read(dev, bufa, i, BLKSZ)) {
+	    err(1, "cannot read %d bytes from %s, offset 0x%x",
+		BLKSZ, device, i);
+	}
+	if (memcmp(bufa, ffs, BLKSZ) == 0) {
+	    p(3, "block %d is all ones, skipping...\n", i/BLKSZ);
+	} else if (memcmp(bufa, nulls, BLKSZ) == 0) {
+	    p(3, "block %d is all zeroes, skipping...\n", i/BLKSZ);
+	} else {
+	    found = i;
+	    break;
+	}
+    }
+    if (found < 0) {
+	errx(1, "flash content is too trivial for size detection");
+    }
+    /*
+     * Chcek whether the content of the non-trivial block we found
+     * repeats after 1, 2, 4, 8, or 16 Megabytes.
+     */
+    for (i = 1; i <= 16; i *= 2) {
+	size = i * 1024 * 1024;
+	if (jq_read(dev, bufb, size + found, BLKSZ)) {
+	    err(1, "cannot read %d bytes from %s, offset 0x%x",
+		BLKSZ, device, size);
+	}
+	p(2, "comparing contents at 0x%x and 0x%x... ", found, size + found);
+	if (memcmp(bufa, bufb, BLKSZ) == 0) {
+	    break;
+	}
+	p(2, "FAIL\n", i);
+    }
+    close(dev);
+    p(2, "OK\n");
+    p(1, "detected a flash size of %d MiB\n", size / (1024*1024));
+    return size;
+}
+
+int
+jq_flashsize(char *device, int offset)
+{
+    int size = jq_readsize(device);
+    return size ? size : jq_flashdetect(device, offset);    
+}
+
+unsigned int
+parseint(char *str)
+{
+    unsigned int val;
+    char *endptr;
+    errno = 0;
+    val = strtol(str, &endptr, 0);
+    if (errno != 0 || *str == 0) {
+	errx(1, "invalid numsber: '%s'", str);
+    }
+    switch (*endptr | ('a' - 'A')) {
+    case 'm':
+	val *= 256;
+    case 'p':
+	val *= 4;
+    case 'k':
+	val *= 1024;
+    case 'b':
+	endptr++;
+    }
+    if (*endptr != '\0') {
+	errx(1, "invalid number: '%s' '%s'", endptr, str);
+    }
+    return val;
 }
 
 int
 main(int argc, char **argv)
 {
-    int size, opt;
+    int opt;
     char *device = NULL;
-    char *endptr;
     int offset = BASE;
+    int size = -1;
     int rawmode = 0;
+    int patchmode = 0;
+    int dev;
 
     if (argc == 1) {
 	usage();
     }
-    
-    while ((opt = getopt(argc, argv, "d:o:rs:fhDl")) != -1) {
+
+    cmd = getopt(argc, argv, "LSRWEh");
+    if (cmd == -1 || cmd == '?' || cmd == 'h') {
+	usage();
+    }
+    while ((opt = getopt(argc, argv, "d:o:rs:fv:pqh")) != -1) {
 	switch (opt) {
 	case 'd':
 	    device = optarg;
 	    break;
 	case 'o':
-	    errno = 0;
-	    offset = strtol(optarg, &endptr, 0);
-	    if (errno != 0 || *optarg == 0 || *endptr != 0) {
-		errx(1, "Invalid number: '%s'", optarg);
-	    }
+	    offset = parseint(optarg);
+	    break;
+	case 's':
+	    size = parseint(optarg);
 	    break;
 	case 'r':
 	    rawmode = 1;
@@ -329,71 +533,165 @@ main(int argc, char **argv)
 	case 'f':
 	    force = 1;
 	    break;
-	case 's':
-	    errx(1, "-%c: Option not implemented.", opt);
+	case 'v':
+	    verbosity = parseint(optarg);
 	    break;
-	case 'D':
-	    debugging = 1;
+	case 'p':
+	    patchmode = 1;
 	    break;
-    case 'l':
-        device = jq_find(device ? device : "/dev/sg*");
-	    if (device == NULL) {
-	        errx(1, "Cannot identify a JQ6500 device.");
-	    }
-	    fprintf(stderr, "Found a JQ6500 module on %s.\n", device);
-        return 0;
-	case 'h':
+	case 'q':
+	    verbosity = 0;
+	    break;
 	default:
 	    usage();
 	}
     }
 
+    if (optind == argc && cmd == 'W') {
+	errx(1, "missing file operand.");
+    }
+
+    if (device) {
+	if (force) {
+	    p(0, "using %s as a JQ6500 module without check.\n", device);
+	} else if (!jq_identify(device)) {
+	    errx(1, "%s does not look like a JQ6500 module, add -f to use it anyway.", device);
+	}
+    } else {
+	device = jq_find("/dev/sg*");
+	if (!device) {
+	    exit(1);
+	}
+	if (cmd == 'L') {
+	    exit(0);
+	}
+    }
+    if (!force && isdevice(device)) {
+	flashsize = jq_flashsize(device, 0);
+    }
+    maxsize = flashsize - offset;
+    buf = malloc(flashsize);
+    memset(buf, 0xff, flashsize);
+
     if (!force) {
-	if (offset < 0 || offset >= FLASHSIZE) {
-	    errx(1, "Offset out of range [0..0x%x].", FLASHSIZE);
+	if (offset < 0 || offset >= flashsize) {
+	    errx(1, "offset out of range [0..0x%x].", flashsize);
 	}
 	if (offset % BLKSZ != 0) {
-	    errx(1, "Offset must be a multiple of %d.", BLKSZ);
+	    errx(1, "offset must be a multiple of %d.", BLKSZ);
 	}
     }
 
-    if (optind == argc) {
-	errx(1, "Missing file operand.");
-    }
+    switch (cmd) {
 
-    if (force && device != NULL) {
-	fprintf(stderr, "Using %s as a JQ6500 module without check.\n", device);
-    } else {
-	device = jq_find(device ? device : "/dev/sg*");
-	if (device == NULL) {
-	    errx(1, "Cannot identify a JQ6500 device.");
-	}
-	fprintf(stderr, "Found a JQ6500 module on %s.\n", device);
-    }
+    case 'W':
+	if (rawmode) {
+	    char *fname = argv[optind];
+	    int fd;
 
-    if (rawmode) {
-	char *fname = argv[optind];
-	int fd;
-	size = filesize(fname);
+	    if (size < 0) {
+		size = flashsize;
+	    }
+	    
+	    p(3, "reading %s\n", fname);
+	    fd = open(fname, O_RDONLY);
+	    if (fd < 0) 
+		err(1, "cannot open %s", fname);
+	    if ((size = read(fd, buf, size)) < 0) {
+		err(1, "cannot read %s", fname);
+	    }	    
+	    close(fd);
 
-	if (!force && size > FLASHSIZE) {
-	    errx(1, "length %d exceeds maximum of %d\n", size, MAXSIZE);
-	}
-	fd = open(fname, O_RDONLY);
-	if (read(fd, buf, size) != size) {
-	    err(1, "cannot read %s", fname);
-	}
-    } else {
-	size = mkjqfs(argc - optind, argv + optind, offset);
-    }
+	    if (patchmode) {
+		p(3, "Patching the image\n", fname);
+		
+		/* Write the ISO size in 2k blocks to the start of the image */
+		uint32_t *isosize = (uint32_t *)buf;
+		*isosize = size / 2048 - 1;
+		
+		/* Patch the flash size into the volume name */
+		char volname[33];
+		int len = snprintf(volname, 33, "JQ6500 %dM", flashsize / (1024*1024));
+		memset (volname+len, ' ', 33-len);
+		memcpy(buf + 0x8028, volname, 32);
+		
+		/* Patch the flash size into the ini file */
+		char *ptr = memmem(buf, size, "Val=0x", 6);
+		
+		if (ptr != NULL) {
+		    ptr += sprintf(ptr, "Val=%#09x", flashsize);
+		    *ptr = 0x0d; /* Overwrite the terminating null byte */
+		} else {
+		    p(3, "cannot patch config.ini\n");
+		}
 
-    if (isdevice(device)) {
-	jqwrite(device, buf, offset, size);
-    } else {	
-	int fd = open(device, O_WRONLY | O_CREAT, "0666");
-	if (write(fd, buf, size) != size) {
-	    err(1, "write failed in %s", device);
+#if 0
+		/* Write out the patched ISO for debugging */
+		fname = "a.out";
+		fd = open(fname, O_WRONLY);
+		if ((size = write(fd, buf, size)) < 0) {
+		    err(1, "cannot write %s", fname);
+		}
+		close(fd);
+		exit(0);
+#endif
+	    }
+	} else {
+	    size = mkjqfs(argc - optind, argv + optind, offset);
 	}
+	
+	if (isdevice(device)) {
+	    jq_flash(device, buf, offset, size);
+	} else {	
+	    int fd = open(device, O_WRONLY | O_CREAT, "0666");
+	    if (fd < 0) 
+		err(1, "cannot open %s", device);
+	    if (write(fd, buf, size) != size) {
+		err(1, "write failed in %s", device);
+	    }
+	    close(fd);
+	}
+	break;
+
+    case 'R':
+	if (size < 0) {
+	    size = BLKSZ;
+	}
+	dev = open(device, O_RDWR);
+	if (dev < 0)
+	    err(1, "cannot open %s", device);
+	p(1, "reading %d bytes from offset 0x%x.\n", size, offset);
+	for (int i = 0; i<size; i += BLKSZ) {
+	    int n = (size - i) > BLKSZ ? BLKSZ : (size - i);
+	    if (jq_read(dev, buf, offset + i, n)) {
+		err(1, "cannot read");
+	    }
+	    write(1, buf, n);
+	}
+	break;
+
+    case 'E':
+	if (size < 0) {
+	    size = BLKSZ;
+	}
+	dev = open(device, O_RDWR);
+	if (dev < 0) 
+	    err(1, "cannot open %s", device);
+	if (size < BLKSZ) size = BLKSZ;
+	p(1, "erasing %d pages from offset 0x%x\n", size/BLKSZ, offset);
+	for (int i = 0; i < size; i += BLKSZ) {
+	    loadbar(i/BLKSZ, size/BLKSZ);
+	    if (jq_erase(dev, offset + i)) {
+		err(1, "erase failed at 0x%x", offset + i);
+	    }
+	}
+	loadbar(size/BLKSZ, size/BLKSZ);
+	p(1, "\n");
+	break;
+
+    case 'S':
+	printf("%#09x\n", flashsize);
+	break;
     }
     
     return 0;
