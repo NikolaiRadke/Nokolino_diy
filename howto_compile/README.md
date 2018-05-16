@@ -23,7 +23,7 @@ In order to flash your ATtiny with the NOKOlino-sketch, you need the **Arduino-I
 1. Disconnect your Arduino.
 2. Connect your ATtiny as seen below:  
 
-![ATTINY-ARDUINO](http://www.nikolairadke.de/NOKOlino/attiny_steckplatine3.png)  
+![ATTINY-ARDUINO](http://www.nikolairadke.de/NOKOlino/attiny_steckplatine.png)  
   
 ### Burning an Attiny bootloader  
 
