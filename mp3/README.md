@@ -1,21 +1,21 @@
 # Voice set for NOKOlino - German
 
-There are four sets: Three **male** sets, one for the 16MBit = **2MByte** variant of the JQ6500, and one for the 8MBit = **1MByte** variant in lower quality and a 32MBit **4 MByte** variant with more sound files, for newer 32MBit-JQ6500 modules. The fourth set is a 32MBit **4 MByte** **female** variant, brand new for *NOKOlina*.  
-
+There are five sets: Three **male** sets, one for the 16MBit = **2MByte** variant of the JQ6500, and one for the 8MBit = **1MByte** variant in lower quality and a 32MBit **4 MByte** variant with more sound files, for newer 32MBit-JQ6500 modules. The fourth set is a 32MBit **4 MByte** **female** variant, brand new for *NOKOlina* and the last set ist the 16MBit **2 MByte** variant.    
+  
 Copy these mp3s on the JQ6500 module. Strictly observe the sequence!
 021.mp3 must be copied as the 21st file. See the [Wiki](https://github.com/NikolaiRadke/NOKOlino/wiki/MP3s-aufspielen) for more detailed instructions.  
-
+  
 **Windows** users can use the (chinese) interface. See this [instructions](http://sparks.gogo.co.nz/jq6500/index.html), written by James Sleeman. **Linux** and **Mac** users should try the [uploading tool](https://github.com/NikolaiRadke/NOKOlino/tree/master/linux_uploader), written by Max Reinhard.  
     
- **8Mbit and 16MBit: (male only)**  
+ **16MBit:**  
   
 | Number  | Assignment               |
 | --------|-------------------------:|
-| 001-020 | Response to belly button |
-| 021-069 | Time based events        |
-| 070     | BEEP battery warning     |
+| 001-030 | Response to belly button |
+| 031-079 | Time based events        |
+| 080     | BEEP battery warning     |
   
- **32MBit: (male and female)**  
+ **32MBit:**  
   
 | Number  | Assignment               |
 | --------|-------------------------:|
