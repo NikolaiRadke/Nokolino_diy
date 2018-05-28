@@ -1,4 +1,4 @@
-/* NOKOlino V1.0 12.03.2018 - Nikolai Radke
+/* NOKOlino V1.0 24.05.2018 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
@@ -34,13 +34,13 @@
 //#define Breadboard                // Breadboard or PCB?
 
 // Voice set selection
-//#define Set_8MBit_16MBit
-#define Set_32MBit
+#define Set_8MBit_16MBit
+//#define Set_32MBit
 //#define Set_own
 
 #ifdef Set_8MBit_16MBit
-  #define Button_event 20           // Last button event number (20.mp3)
-  #define Time_event   69           // Last time event number (69.mp3)
+  #define Button_event 30           // Last button event number (30.mp3)
+  #define Time_event   79           // Last time event number (79.mp3)
 #endif
 #ifdef Set_32MBit
   #define Button_event 40
