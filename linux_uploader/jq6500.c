@@ -135,7 +135,7 @@ usage(void)
 	   "  -s size     default: 4096 for read and erase, file size for write\n"
 	   "  -f          force operation (disables some sanity checks, use with care!)\n"
 	   "  -v level    set the verbosity level (default: 1)\n"
-	   "  -p          patch the detected size into config.ini of the given imag before flashing\n"
+	   "  -p          patch the detected size into config.ini of the given image before flashing\n"
 	   "  -q          be quiet\n"
 	   "\n");
     
@@ -408,7 +408,7 @@ jq_flashdetect(char *device, int offset)
 {
     int dev;
     int i;
-    int size;
+    int size = 0;
     int found = -1;
     uint8_t bufa[BLKSZ];
     uint8_t bufb[BLKSZ];
@@ -447,28 +447,38 @@ jq_flashdetect(char *device, int offset)
      * repeats after 1, 2, 4, 8, or 16 Megabytes.
      */
     for (i = 1; i <= 16; i *= 2) {
-	size = i * 1024 * 1024;
-	if (jq_read(dev, bufb, size + found, BLKSZ)) {
+	int sz = i * 1024 * 1024;
+	if (jq_read(dev, bufb, sz + found, BLKSZ)) {
 	    err(1, "cannot read %d bytes from %s, offset 0x%x",
-		BLKSZ, device, size);
+		BLKSZ, device, sz);
 	}
-	p(2, "comparing contents at 0x%x and 0x%x... ", found, size + found);
+	p(2, "comparing contents at 0x%x and 0x%x... ", found, sz + found);
 	if (memcmp(bufa, bufb, BLKSZ) == 0) {
+	    p(2, "OK\n");
+	    p(1, "detected a flash size of %d MiB\n", size / (1024*1024));
+	    size = sz;
 	    break;
+	} else {
+	    p(2, "FAIL\n", i);
 	}
-	p(2, "FAIL\n", i);
     }
     close(dev);
-    p(2, "OK\n");
-    p(1, "detected a flash size of %d MiB\n", size / (1024*1024));
+    if (size == 0) {
+	errx(1, "Cannot detect flash size. Is it larger than 16MiB?\n");
+    }
     return size;
 }
 
 int
 jq_flashsize(char *device, int offset)
 {
-    int size = jq_readsize(device);
-    return size ? size : jq_flashdetect(device, offset);    
+    int size;
+
+    size = jq_readsize(device);
+    if (size == 0) {
+	size = jq_flashdetect(device, offset);
+    }
+    return size;
 }
 
 unsigned int
