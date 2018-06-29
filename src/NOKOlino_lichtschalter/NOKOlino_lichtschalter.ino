@@ -30,7 +30,7 @@
 // Configuation
 #define Time         10             // Say something every statistical 10 minutes
 #define Volume       25             // Volume 0-30 - 20 is recommended 
-#define Darkness     4              // The lower the darker the light must be
+#define Darkness     0              // The lower the darker the light must be
 #define Breadboard                // Breadboard or PCB?
 
 // Voice set selection
