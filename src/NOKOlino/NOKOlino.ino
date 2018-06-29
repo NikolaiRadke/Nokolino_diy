@@ -1,10 +1,10 @@
-/* NOKOlino V1.0 24.05.2018 - Nikolai Radke
+/* NOKOlino V1.0 29.06.2018 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correctly.
  *  
- *  Flash-Usage: 3.724 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
+ *  Flash-Usage: 3.718 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
  *  
  *  Circuit:
  *  1: RST | PB5  free
@@ -147,8 +147,8 @@ while(1)
   {
     if (!(PINB & (1<<PB2))) JQ6500_play(random(0,Button_event+1));      // Button event
     else if (random(0,Time*60*8)==1) JQ6500_play(random(Button_event+1,Time_event+1)); // Time event
-    else attiny_sleep();
   }
+  attiny_sleep();
   
   // Check current, if defined
   #ifdef Batterywarning
