@@ -1,4 +1,4 @@
-/* NOKOlino V1.0 29.06.2018 - Nikolai Radke
+/* NOKOlino V1.0 05.07.2018 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
@@ -31,7 +31,7 @@
 #define Time         10             // Say something every statistical 10 minutes
 #define Volume       25             // Volume 0-30 - 20 is recommended 
 #define Darkness     0              // The lower the darker the light must be
-#define Breadboard                // Breadboard or PCB?
+#define Breadboard                  // Breadboard or PCB?
 
 // Voice set selection
 //#define Set_8MBit_16MBit
