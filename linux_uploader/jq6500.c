@@ -132,11 +132,14 @@ usage(void)
 	   "  -d device   SCSI generic device or file to write to (default: autodetect)\n"
 	   "  -r          raw mode: read/write flash contents to/from a single file\n"
 	   "  -o offset   default: 0x40000\n"
-	   "  -s size     default: 4096 for read and erase, file size for write\n"
+	   "  -s size     default: 4096 for read and erase, actual file size for write\n"
 	   "  -f          force operation (disables some sanity checks, use with care!)\n"
 	   "  -v level    set the verbosity level (default: 1)\n"
-	   "  -p          patch the detected size into config.ini of the given image before flashing\n"
+	   "  -p          patch the detected size into config.ini of the given image before\n"
+	   "              flashing\n"
 	   "  -q          be quiet\n"
+	   "\n"
+	   "Project home page: http://m4x.de/jq6500\n"
 	   "\n");
     
     exit(1);
@@ -352,7 +355,7 @@ jq_find(const char *pattern)
     globfree(&gb);
 
     if (devname == NULL) {
-	warnx("cannot find a JQ6500 module.");
+	errx(1, "cannot find a JQ6500 module.");
     }
     if (verbosity < 2) {
 	p(1, "found a JQ6500 module on %s\n", devname);
