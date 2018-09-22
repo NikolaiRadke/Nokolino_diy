@@ -1,14 +1,14 @@
-/* NOKOlino V1.0 29.06.2018 - Nikolai Radke
+/* NOKOlino V2.0 22.09.2018 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correctly.
  *  
- *  Flash-Usage: 3.718 (1.8.2 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
+ *  Flash-Usage: 3.768 (1.8.6 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
  *  
  *  Circuit:
  *  1: RST | PB5  free
- *  2: A3  | PB3  free          
+ *  2: A3  | PB3  Optional SFH300          
  *  3: A2  | PB4  Busy JQ6500 - 8
  *  4: GND        GND
  *  5: D0  | PB0  free
@@ -29,16 +29,17 @@
 //--------------------------------------------------------------------------------
 // Configuation
 #define Time         10             // Say something every statistical 10 minutes
-#define Volume       20             // Volume 0-30 - 20 is recommended 
+#define Volume       25             // Volume 0-30 - 25 is recommended 
+#define Darkness     4              // Optional: The lower the darker the light must be
 
-//#define Breadboard                // Breadboard or PCB?
+//#define Breadboard                  // Breadboard or PCB?
 
 // Voice set selection
-#define Set_8MBit_16MBit
+#define Set_16MBit
 //#define Set_32MBit
 //#define Set_own
 
-#ifdef Set_8MBit_16MBit
+#ifdef Set_16MBit
   #define Button_event 30           // Last button event number (30.mp3)
   #define Time_event   79           // Last time event number (79.mp3)
 #endif
@@ -52,20 +53,23 @@
 #endif
 
 #ifdef Breadboard
-  #define Offset       0.4          // Battery measuring error
+  #define Offset       0.3          // Battery measuring error
   #define maxInput     50           // Max. value from busy line. 
 #else
-  #define Offset       0.6
+  #define Offset       0.1
   #define maxInput     0
 #endif
 
 // Optional - comment out with // to disable
-#define Batterywarning             // NOKOlino gives a warning when battery is low
+#define Batterywarning              // NOKOlino gives a warning when battery is low
+//#define Lightsensor               // NOKOlino will be quite in the dark
+//#define StartupBeep               // NOKOlino will say "beep" when turned on
+
 //---------------------------------------------------------------------------------
 
 // Optional battery warning
-#define minCurrent   3.50 +Offset   // Low power warning current + measuring error
-#define battLow      3.30 +Offset   // Minimal voltage before JQ6500 fails
+#define minCurrent   3.60 +Offset  // Low power warning current + measuring error
+#define battLow      3.50 +Offset  // Minimal voltage before JQ6500 fails
 
 // Hardware pins
 #define TX      0
@@ -86,6 +90,7 @@
 uint16_t address,seed;
 volatile boolean f_wdt = 1;          // Volatile -> it is an interrupt routine
 boolean low=false;
+boolean dark=false;
 
 SoftwareSerial mp3(TX,RX);           // TX to D0, RX to D1
 
@@ -101,23 +106,21 @@ init();
 {
   // Power saving
   MCUCR |= _BV(BODS) | _BV(BODSE);   // Disable brown out detection - default?
-  ACSR |= _BV(ACD);                  // Disable analog comparator - default?
+  //ACSR |= _BV(ACD);                  // Disable analog comparator - default?
   DDRB &= ~(1<<PB2);                 // D2 INPUT
   PORTB |= (1<<PB2);                 // D2 HIGH 
   
   // Start JQ6500
   mp3.begin(9600);
   mp3.write("\x7E\x02\x0C\xEF");     // Reset JQ6500
-  setup_watchdog(5);                 // Sleep 500ms
-  attiny_sleep();                 
+  setup_watchdog(5);                 // Set sleep time to 500ms
+  attiny_sleep();                    // Sleep 500ms
   mp3.write("\x7E\x03\x06");
   mp3.write(Volume);                 // Set volume
   mp3.write("\xEF"); 
-  setup_watchdog(3);
-  attiny_sleep();                    // Sleep 128ms
+  attiny_sleep();                    // Sleep 500ms
   mp3.write("\x7E\x03\x11\x04\xEF"); // No loop
-  attiny_sleep();                    // Sleep 128ms
-  mp3.write("\x7E\x02\x0A\xEF");     // Sleep, JQ6500!
+  attiny_sleep();                    // Sleep 500ms
 
   // Randomize number generator
   address=eeprom_read_word(0);       // Read EEPROM address
@@ -137,34 +140,49 @@ init();
   randomSeed(seed);                  // Randomize
   seed++;                            // New seed
   eeprom_write_word(address,seed);   // Save new seed for next startup
+
+  // Optional startup beep
+  #ifdef StartupBeep
+    attiny_sleep();
+    JQ6500_play(Time_event+1);       // NOKOLINO says "Beep"
+  #endif
+
+  mp3.write("\x7E\x02\x0A\xEF");     // Sleep, JQ6500!
+  setup_watchdog(3);                 // Set sleep time to 128ms   
 }
 
 // Main loop
 while(1)
 {
   // Wait for button or time and go to sleep - ~8 times/second         
-  if (!low) 
+  if (!low && !dark) // Quiet if battery too low or optional light too dark
   {
     if (!(PINB & (1<<PB2))) JQ6500_play(random(0,Button_event+1));      // Button event
     else if (random(0,Time*60*8)==1) JQ6500_play(random(Button_event+1,Time_event+1)); // Time event
   }
-  attiny_sleep();
+  attiny_sleep(); // Safe battery
   
-  // Check current, if defined
+  // Optional: Check current
   #ifdef Batterywarning
-  if (counter==0)                
-  {
-    current=MeasureVCC();
-    vref=1024*1.1f/(double)current;
-    if (vref<=minCurrent)            // Current below minimum
+    if (counter==0)                
     {
-      if (vref<=battLow) low=true;   // Power too low for JQ6500
-      else JQ6500_play(Time_event+1);// NOKOLINO says "Beep"
+     current=MeasureVCC();
+     vref=1024*1.1f/(double)current;
+     if (vref<=minCurrent)            // Current below minimum
+     {
+       if (vref<=battLow) low=true;   // Power too low for JQ6500
+       else JQ6500_play(Time_event+1);// NOKOLINO says "Beep"
+     }
+     else low=false;
+     counter=400;                     // Every minute, 50x 128ms + some sleeping ms
     }
-    else low=false;
-    counter=400;                     // Every minute, 50x 128ms + some sleeping ms
-  }
-  counter--;
+    counter--;
+  #endif
+
+  // Optional: Check darkness
+  #ifdef Lightsensor
+    if (analogRead(A3)<=Darkness) dark=true;
+    else dark=false;
   #endif
 }}
 
@@ -216,10 +234,3 @@ ISR(WDT_vect)                       // Set global flag
 {
   f_wdt=1; 
 }
-
-
-
-
-
-
-

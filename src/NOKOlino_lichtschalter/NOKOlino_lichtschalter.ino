@@ -30,13 +30,13 @@
 // Configuation
 #define Time         10             // Say something every statistical 10 minutes
 #define Volume       20             // Volume 0-30 - 20 is recommended 
-#define Darkness     0              // The lower the darker the light must be
+#define Darkness      4             // The lower the darker the light must be
 
 //#define Breadboard                // Breadboard or PCB?
 
 // Voice set selection
 #define Set_8MBit_16MBit
-//#define Set_32MBit
+#define Set_32MBit
 //#define Set_own
 
 #ifdef Set_8MBit_16MBit
@@ -223,5 +223,3 @@ ISR(WDT_vect)                       // Set global flag
 {
   f_wdt=1; 
 }
-
-
