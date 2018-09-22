@@ -1,6 +1,10 @@
 # Newsblog
 
 ## 2018
+* **22.09.2018** New Firmware **2.0-220918**:
+  * Optional startup beep.  
+  * Optional phototransistor feature.  
+  * Improved volume handling, some modules need more startup time.  
 * **03.09.2018** See NOKOlino an me at the Maker Faire Hannover: 15.09.-16.09. HCC Hannover.  
 * **29.06.2018** Firmware **1.0-290618**: Improved power saving when battery is low.  
 * **16.06.2018** Updated the upload tool.  
