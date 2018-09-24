@@ -106,7 +106,7 @@ init();
 {
   // Power saving
   MCUCR |= _BV(BODS) | _BV(BODSE);   // Disable brown out detection - default?
-  //ACSR |= _BV(ACD);                  // Disable analog comparator - default?
+  ACSR |= _BV(ACD);                  // Disable analog comparator - default?
   DDRB &= ~(1<<PB2);                 // D2 INPUT
   PORTB |= (1<<PB2);                 // D2 HIGH 
   
