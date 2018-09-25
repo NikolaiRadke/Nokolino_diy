@@ -1,10 +1,10 @@
-/* NOKOlino V2.0 22.09.2018 - Nikolai Radke
+/* NOKOlino V2.0 25.09.2018 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correctly.
  *  
- *  Flash-Usage: 3.768 (1.8.6 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
+ *  Flash-Usage: 3.770 (1.8.6 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
  *  
  *  Circuit:
  *  1: RST | PB5  free
@@ -32,11 +32,11 @@
 #define Volume       25             // Volume 0-30 - 25 is recommended 
 #define Darkness     4              // Optional: The lower the darker the light must be
 
-//#define Breadboard                  // Breadboard or PCB?
+#define Breadboard                  // Breadboard or PCB?
 
 // Voice set selection
-#define Set_16MBit
-//#define Set_32MBit
+//#define Set_16MBit
+#define Set_32MBit
 //#define Set_own
 
 #ifdef Set_16MBit
@@ -61,9 +61,10 @@
 #endif
 
 // Optional - comment out with // to disable
-#define Batterywarning              // NOKOlino gives a warning when battery is low
-#define Lightsensor               // NOKOlino will be quite in the dark
-#define StartupBeep               // NOKOlino will say "beep" when turned on
+#define Batterywarning              // Gives a warning when battery is low
+#define Lightsensor               // Will be quite in the dark
+#define SleepComplain             // Will complain if button pressed while its dark
+#define StartupBeep               // Will say "beep" when turned on
 
 //---------------------------------------------------------------------------------
 
@@ -155,9 +156,18 @@ init();
 while(1)
 {
   // Wait for button or time and go to sleep - ~8 times/second         
-  if (!low && !dark) // Quiet if battery too low or optional light too dark
+  if (!low)                                       // Quiet if battery too low
   {
-    if (!(PINB & (1<<PB2))) JQ6500_play(random(0,Button_event+1));      // Button event
+    if (!(PINB & (1<<PB2))) 
+    {
+      if (dark) {                                 // If fototransistor is available
+        #ifdef SleepComplain                      // and complain feature enabled:
+          JQ6500_play(Time_event);                // complain when button pressed
+        #endif
+      }
+      else JQ6500_play(random(0,Button_event+1)); // Button event
+    }
+    
     else if (random(0,Time*60*8)==1) JQ6500_play(random(Button_event+1,Time_event+1)); // Time event
   }
   attiny_sleep(); // Safe battery
