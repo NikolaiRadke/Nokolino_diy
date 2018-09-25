@@ -1,7 +1,8 @@
 # Newsblog
 
 ## 2018
-* **22.09.2018** New Firmware **2.0-220918**:
+* **25.09.2018** Firmware **2.0-281918**: Optional complaining when button is pressed while it is dark.
+* **22.09.2018** Firmware **2.0-220918**:
   * Optional startup beep.  
   * Optional phototransistor feature.  
   * Improved volume handling, some modules need more startup time.  
