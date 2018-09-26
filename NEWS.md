@@ -1,6 +1,7 @@
 # Newsblog
 
 ## 2018
+* **26.08.2018** See NOKOlino and me at Wissensnacht Ruhr Gelsenkirchen: 28.08.2018.  
 * **25.09.2018** Firmware **2.0-281918**: Optional complaining when button is pressed while it is dark.
 * **22.09.2018** Firmware **2.0-220918**:
   * Optional startup beep.  
