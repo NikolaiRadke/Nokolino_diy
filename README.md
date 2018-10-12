@@ -2,7 +2,7 @@
 
 The ATTiny-based litte brother of NOKO. Tiny and cute. And everyone is invited to **contribute**. NOKOlino is for everyone.  What's new? See the [newsblog](https://github.com/NikolaiRadke/NOKOlino/tree/master/NEWS.md). Are you looking for the new PCB verion? Look here: [NOKOlino_2](https://github.com/NikolaiRadke/NOKOlino_2).    
 
-![NOKOlino light blue](http://www.nikolairadke.de/NOKOlino/nokolino_wiki.png)
+![Three NOKOlinos](http://www.nikolairadke.de/NOKOlino/nokolinos.png)
   
 Like his big brother NOKO, the little NOKOlino delights it's surroundings with cheeky comments. But unlike NOKO he is more obstinate - no radio, a display, no frills. Instead of an Arduino he has a small **ATtiny** microcontroller, only one on-off switch and a big button. But he is small, can stay active for days and is, in contrast to his big brother, very easy to build.  
   
