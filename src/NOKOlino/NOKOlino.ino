@@ -1,10 +1,10 @@
-/* NOKOlino V2.0 22.09.2018 - Nikolai Radke
+/* NOKOlino V2.0 15.01.2019 - Nikolai Radke
  *  
  *  Sketch for Mini-NOKO-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correctly.
  *  
- *  Flash-Usage: 3.768 (1.8.6 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
+ *  Flash-Usage: 3.768 (1.8.8 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
  *  
  *  Circuit:
  *  1: RST | PB5  free
@@ -115,10 +115,6 @@ init();
   mp3.write("\x7E\x02\x0C\xEF");     // Reset JQ6500
   setup_watchdog(5);                 // Set sleep time to 500ms
   attiny_sleep();                    // Sleep 500ms
-  mp3.write("\x7E\x03\x06");
-  mp3.write(Volume);                 // Set volume
-  mp3.write("\xEF"); 
-  attiny_sleep();                    // Sleep 500ms
   mp3.write("\x7E\x03\x11\x04\xEF"); // No loop
   attiny_sleep();                    // Sleep 500ms
 
@@ -187,8 +183,12 @@ while(1)
 }}
 
 void JQ6500_play(uint8_t f)          // Plays MP3 number f
-{
-  attiny_sleep();                    // Without pause, pull-up messes the busy signal
+{               
+  mp3.write("\x7E\x03\x06");
+  mp3.write(Volume);                 // Set volume
+  mp3.write("\xEF");                 // JQ6500 looses volume settings after sleep... 
+  attiny_sleep();
+  attiny_sleep();                     // Without long pause, pull-up messes the busy signal
   mp3.write("\x7E\x04\x03\x01");     // Play file number f
   mp3.write(f);
   mp3.write("\xEF");
