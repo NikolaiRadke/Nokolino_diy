@@ -40,7 +40,7 @@ Now you can flash your ATtiny with any sketch you want! But this time, we concen
 
 1. Set the avarage talking interval in line 30 (10 for 10 minutes is preset).  
 2. Set the volume in line 32. 25 is recommended for NOKOlino, 22 for NOKOlina.  
-3. Are you building NOKOlino on a Breadboard? Set line 34.  
+3. Are you building NOKOlino on a breadboard? Set line 34.  
 4. Select your voice set in line 37, 38 or 39.  
 5. If you don't want any battery warnings, comment out line 63.  
 
