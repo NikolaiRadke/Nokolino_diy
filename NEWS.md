@@ -1,8 +1,12 @@
 # Newsblog
 
-## 2018  
+# 2019
+
 * **15.01.2019** Firmware **2.0-150119**: Reworked volume control. Some modules have issues after sleep mode.  
 * **15.01.2019** Testet IDE 1.8.8. Works well.  
+
+## 2018  
+
 * **19.10.2018** New Linux upload tool. You can upload an english interface by typing ./jq6500 -X   
 * **26.09.2018** See NOKOlino and me at Wissensnacht Ruhr Gelsenkirchen: 28.08.2018.  
 * **25.09.2018** Firmware **2.0-250918**: Optional complaining when button is pressed while it is dark.
