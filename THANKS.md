@@ -16,6 +16,7 @@ Active supporters:
 - **Daniel Bachfeld** - the QI wireless charging idea.  
 - **Thomas Stolt** - bugfixes and NOKOlino_2.  
 - **"Nickneck"** - translating the JQ6500 uploader.  
+- **Reinhard Max** - for the upload and rescue tool.  
   
 Used ressources:  
 
