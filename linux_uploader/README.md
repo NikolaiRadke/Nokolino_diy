@@ -22,7 +22,7 @@ Strangely, some modules come without the integrated Windows software. If you hav
 
 That's it. You can now use your module with Windows.  
   
-## Repairing a JQ6500 without Windows softer without Linux
+## Repairing a JQ6500 without Windows software without Linux
   
 If you are a Windows user see my [JQ6500-rescue-tool](https://github.com/NikolaiRadke/JQ6500-rescue-tool) repository. There you find a quite simple way to fix your module.   
 
