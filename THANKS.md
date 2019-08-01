@@ -11,7 +11,7 @@ These people helped me bringing life to NOKOlino:
   
 Active supporters:  
 
-- **"Brickhub** - bugfixes.  
+- **"Brickhub"** - bugfixes.  
 - **Horst Friedrich** - the phototransistor idea.  
 - **Daniel Bachfeld** - the QI wireless charging idea.  
 - **Thomas Stolt** - bugfixes and NOKOlino_2.  
