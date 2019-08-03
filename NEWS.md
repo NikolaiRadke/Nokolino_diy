@@ -3,7 +3,7 @@
 # 2019
 
 * **03.08.2019** Firmware **2.1-030819**: With some small hardware additions NOKOlino can get a new voice set via USB!  
-* **02.08.2019** Testet IDE 1.8.9. with no problems found.  
+* **14.04.2019** Testet IDE 1.8.9. with no problems found.  
 * **15.01.2019** Firmware **2.0-150119**: Reworked volume control. Some modules have issues after sleep mode.  
 * **15.01.2019** Testet IDE 1.8.8. Works well.  
 
