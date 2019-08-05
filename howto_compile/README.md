@@ -38,11 +38,12 @@ Now you can flash your ATtiny with any sketch you want! But this time, we concen
 
 ### Configuring NOKOlino.ino
 
-1. Set the avarage talking interval in line 30 (10 for 10 minutes is preset).  
-2. Set the volume in line 32. 25 is recommended for NOKOlino, 22 for NOKOlina.  
-3. Are you building NOKOlino on a breadboard? Set line 34.  
-4. Select your voice set in line 37, 38 or 39.  
-5. If you don't want any battery warnings, comment out line 63.  
+1. Set the avarage talking interval in line 31 (10 for 10 minutes is preset).  
+. Set the volume in line 32. 25 is recommended for NOKOlino, 22 for NOKOlina.  
+3. Are you building NOKOlino on a breadboard? Set line 35.  
+4. Select your voice set in line 38, 39 or 40  
+5. If you don't want any battery warnings, comment out line 64.  
+6. If you want NOKOlino to be quiet on startup, comment out line 66.  
 
 ### Flashing NOKOlino firmware
   
