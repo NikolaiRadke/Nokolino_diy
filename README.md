@@ -1,6 +1,6 @@
 # ![NOKO](https://www.nikolairadke.de/NOKOlino/nokolino_klein3.png) NOKOlino
 
-The ATTiny-based litte brother of NOKO. Tiny and cute. And everyone is invited to **contribute**. NOKOlino is for everyone.  What's new? See the [newsblog](https://github.com/NikolaiRadke/NOKOlino/tree/master/NEWS.md). Are you looking for the new PCB verion? Look here: [NOKOlino_2](https://github.com/NikolaiRadke/NOKOlino_2).    
+The ATTiny-based litte brother of NOKO. Tiny and cute. And everyone is invited to **contribute**. NOKOlino is for everyone.  What's new? See the [newsblog](https://github.com/NikolaiRadke/NOKOlino/tree/master/NEWS.md). Are you looking for the new PCB version? Look here: [NOKOlino_2](https://github.com/NikolaiRadke/NOKOlino_2).    
 
 ![Three NOKOlinos](https://www.nikolairadke.de/NOKOlino/nokolinos.png)
   
