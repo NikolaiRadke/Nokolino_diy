@@ -2,6 +2,7 @@
 
 # 2019
 
+* **27.08.2019** New linux upload and repair tool. The make command now works with Debian/Ubuntu/Mint.  
 * **05.08.2019** New release **V2.1-030819**.  
 * **03.08.2019** Firmware **2.1-030819**: With some small hardware additions NOKOlino can get a new voice set via USB!  
 * **14.04.2019** Testet IDE 1.8.9. with no problems found.  
