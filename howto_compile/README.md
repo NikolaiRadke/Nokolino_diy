@@ -29,12 +29,12 @@ In order to flash your ATtiny with the NOKOlino-sketch, you need the **Arduino-I
 
 1. Connect your Arduino to your system again.  
 2. Select ``` Tools > Programmer > Arduino as ISP ```.  
-3. Select ``` Tools > Board > ATtiny ```.  
+3. Select ``` Tools > Board > ATtiny25/45/85 ```.  
 4. Select ``` Tools > Processor > ATtiny85 ``` or ``` Tools > Processor > ATtiny45 ```.  
 5. Select ``` Tools > Clock > 8 MHz (internal) ```.  
 6. Start burning process with ``` Tools > Burn Bootloader ```.  
 
-Now you can flash your ATtiny with any sketch you want! But this time, we concentrate on NOKOlino.  
+Now you can flash your ATtiny with any sketch you want! But this time, we focus on NOKOlino.  
 
 ### Configuring NOKOlino.ino
 
@@ -44,6 +44,7 @@ Now you can flash your ATtiny with any sketch you want! But this time, we concen
 4. Select your voice set in line 38, 39 or 40  
 5. If you don't want any battery warnings, comment out line 64.  
 6. If you want NOKOlino to be quiet on startup, comment out line 66.  
+7. Check line 65 if you are using the optional light sensor.  
 
 ### Flashing NOKOlino firmware
   
