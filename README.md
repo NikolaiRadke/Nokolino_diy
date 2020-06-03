@@ -74,6 +74,5 @@ Nokolino_diy/
 ```
 ### Let's get started!
 
-Interested in Nokolino? Great! Let's start here:  
-[German wiki](https://github.com/NikolaiRadke/Nokolino_diy/wiki).  
+Interested in Nokolino? Great! Let's start here: [German wiki](https://github.com/NikolaiRadke/Nokolino_diy/wiki).  
 English wiki will follow. One day...
