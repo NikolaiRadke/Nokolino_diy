@@ -8,7 +8,7 @@ What's new? See the [newsblog](https://github.com/NikolaiRadke/Nokolino_diy/tree
   
 ![Three Nokolinos](https://www.nikolairadke.de/Nokolino_diy/nokolinos.png)
   
-Like his big brother **Noko**, the little Nokolino delights it's surroundings with cheeky comments. But unlike Noko he is more obstinate - no radio, a display, no frills. Instead of an Arduino he has a small **ATtiny** microcontroller, only one on-off switch and a big button. But he is small, can stay active for days and is, in contrast to his big brother, very easy to build.  
+Like his big brother **Noko**, the little Nokolino delights it's surroundings with cheeky comments. But unlike Noko he is more obstinate - no radio, no display, no frills. Instead of an Arduino he has a small **ATtiny** microcontroller, only an on-off switch and a big button. But he is small, can stay active for days and is, in contrast to his big brother, very easy to build.  
   
 Another useful application option would be to use the hardware without the monster suit as a **music box** in an old used doll to bring it back to modern days, maybe with other sounds or songs.  
 
