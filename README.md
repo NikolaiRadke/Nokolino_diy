@@ -18,7 +18,7 @@ What does he to - technically? Whenever you press his button, he will laugh. And
   
 ### Notes for non-German Nokolino makers  
   
-Right now, the building wiki, the voice set and the manual are in German. I'll try to translate the wiki and the manual on day. Until then, feel free to ask me for translation, if you need help. **Contribute!** I need an English voice set and English text files. In addition, any other language is welcome, Noko is to be cosmopolitan!
+Right now, the building wiki, the voice set and the manual are in German. I'll try to translate the wiki and the manual on day. Until then, feel free to ask me for translation, if you need help. **Contribute!** I need an English voice set and English text files. In addition, any other language is welcome, Nokolino is to be cosmopolitan!
   
 ### Prerequisites
   
