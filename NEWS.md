@@ -2,7 +2,7 @@
 
 # 2020
   
-* **02.06.2020** The repository gets a rework.  
+* **03.06.2020** The repository got a small rework.  
 * **09.03.2020** Tested IDE 1.8.12. Yeah, it's working, too.  
 * **13.02.2020** Tested IDE 1.8.11. Again, it's working.  
   
