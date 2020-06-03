@@ -1,10 +1,10 @@
-/* NOKOlino V2.1 03.08.2019 - Nikolai Radke
+/* Nokolino V2.1 03.08.2019 - Nikolai Radke
  *  
- *  Sketch for Mini-NOKO-Monster
+ *  Sketch for Mini-Noko-Monster
  *  for Attiny45/85 | 8 Mhz - remember to flash your bootloader first!
  *  SoftwareSerial needs 8 MHz to work correctly.
  *  
- *  Flash-Usage: 3.706 (1.8.9 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
+ *  Flash-Usage: 3.696 (1.8.12 | ATTiny 1.0.2 | Linux X86_64 | ATtiny85)
  *  
  *  Circuit:
  *  1: RST | PB5  free
@@ -61,9 +61,9 @@
 #endif
 
 // Optional - comment out with // to disable
-#define Batterywarning              // NOKOlino gives a warning when battery is low
-//#define Lightsensor               // NOKOlino will be quite in the dark
-#define StartupBeep                 // NOKOlino will say "beep" when turned on
+#define Batterywarning              // Nokolino gives a warning when battery is low
+//#define Lightsensor               // Nokolino will be quite in the dark
+#define StartupBeep                 // Nokolino will say "beep" when turned on
 
 //---------------------------------------------------------------------------------
 
@@ -144,7 +144,7 @@ init(); {
   // Optional startup beep
   #ifdef StartupBeep
     attiny_sleep();
-    JQ6500_play(Time_event+1);         // NOKOLINO says "Beep"
+    JQ6500_play(Time_event+1);         // Nokolino says "Beep"
   #endif
 
   mp3.write("\x7E\x02\x0A\xEF");       // Sleep, JQ6500!
@@ -168,7 +168,7 @@ while(1)
      vref=1024*1.1f/(double)current;
      if (vref<=minCurrent) {           // Current below minimum
        if (vref<=battLow) low=true;    // Power too low for JQ6500
-       else JQ6500_play(Time_event+1); // NOKOLINO says "Beep"
+       else JQ6500_play(Time_event+1); // Nokolino says "Beep"
      }
      else low=false;
      counter=400;                      // Every minute, 50x 128ms + some sleeping ms
