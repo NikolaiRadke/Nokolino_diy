@@ -1,6 +1,6 @@
 # ![Nokolino](http://www.nikolairadke.de/Nokolino/nokolino_back.jpg)
   
-*** **This repository is currently under reconstruction - 02.06.2020** ***  
+*** **This repository is currently under reconstruction - 03.06.2020** ***  
   
 The ATtiny-based litte brother of Noko. This is the Repository for the **diy - Do It Yourself** version. Tiny and cute. And everyone is invited to **contribute**. Nokolino is for everyone. Are you looking for the new PCB version? Look here: [Nokolino_pcb](https://github.com/NikolaiRadke/Nokolino_pcb), or are you an owner of a kit? Look here [Nokolino](http://github.com/NikolaiRadke/Nokolino)  
   
