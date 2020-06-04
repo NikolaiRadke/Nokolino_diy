@@ -8,6 +8,7 @@ These people helped me bringing life to Nokolino:
 - **Carsten Caniglia** - the male voice of Nokolino. Look at his [Homepage](http://www.carstencaniglia.com). 
 - **Norma Anthes** - the female voice of Nokolina. Look at her [Homepage](http://norma-anthes.de).  
 - **Helga Hansen** - from the Make Magazin for promoting Nokolino.  
+- **Elisabeth Seidl** - Media design.  
   
 Active supporters:  
 
