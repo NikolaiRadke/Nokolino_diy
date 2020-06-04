@@ -5,7 +5,7 @@ These people helped me bringing life to Nokolino:
 - **Hans Radke** - (my dad) hardware construction and a lot of soldering.
 - **Regina Radke** - (my mom) monster suit hints.  
 - **Nora Linder** - creating and sewing the monster suit and spellchecking.
-- **Carsten Caniglia** - the male voice of Nokolino. Look at his [Homepage](http://www.carstencaniglia.com). 
+- **Carsten Caniglia** - the male voice of Nokolino. Look at his [Homepage](https://neidig.org/carsten-caniglia/). 
 - **Norma Anthes** - the female voice of Nokolina. Look at her [Homepage](http://norma-anthes.de).  
 - **Helga Hansen** - from the Make Magazin for promoting Nokolino.  
 - **Elisabeth Seidl** - Media design.  
