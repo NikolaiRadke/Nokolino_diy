@@ -2,7 +2,7 @@
 
 # 2020
   
-  **04.06.2020** New release **V1.2-030819**.  
+* **04.06.2020** New release **V1.2-030819**.  
 * **03.06.2020** The repository got a small rework.  
 * **09.03.2020** Tested IDE 1.8.12. Yeah, it's working, too.  
 * **13.02.2020** Tested IDE 1.8.11. Again, it's working.  
