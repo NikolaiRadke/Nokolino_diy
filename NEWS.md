@@ -2,6 +2,7 @@
 
 # 2020
   
+  **04.06.2020** New release **V1.2-030819**.  
 * **03.06.2020** The repository got a small rework.  
 * **09.03.2020** Tested IDE 1.8.12. Yeah, it's working, too.  
 * **13.02.2020** Tested IDE 1.8.11. Again, it's working.  
@@ -10,7 +11,7 @@
   
 * **26.09.2019** Tested IDE 1.8.10. Still working.  
 * **27.08.2019** New linux upload and repair tool. The make command now works with Debian/Ubuntu/Mint.  
-* **05.08.2019** New release **V2.1-030819**.  
+* **05.08.2019** New release **V1.1-030819**.  
 * **03.08.2019** Firmware **2.1-030819**: With some small hardware additions Nokolino can get a new voice set via USB!  
 * **14.04.2019** Testet IDE 1.8.9. with no problems found.  
 * **15.01.2019** Firmware **2.0-150119**: Reworked volume control. Some modules have issues after sleep mode.  
