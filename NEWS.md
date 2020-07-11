@@ -2,6 +2,7 @@
 
 # 2020
   
+* **10.07.2020** Tested new IDE 1.8.13. Works good.  
 * **04.06.2020** New release **V1.2-030819**.  
 * **03.06.2020** The repository got a small rework.  
 * **09.03.2020** Tested IDE 1.8.12. Yeah, it's working, too.  
