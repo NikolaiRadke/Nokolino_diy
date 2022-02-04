@@ -61,7 +61,6 @@
 #endif
 
 // Optional - comment out with // to disable
-#define Batterywarning              // Nokolino gives a warning when battery is low
 //#define Lightsensor               // Nokolino will be quite in the dark
 #define StartupBeep                 // Nokolino will say "beep" when turned on
 
@@ -87,7 +86,8 @@
 #define BODSE 2                        // BOD sleep enable bit in MCUCR
 
 // Variables
-uint16_t address,seed;
+uint16_t eeprom,seed;
+uint16_t *address;
 volatile boolean f_wdt = 1;            // Volatile -> it is an interrupt routine
 boolean low=false;
 boolean dark=false;
@@ -123,19 +123,20 @@ init(); {
   mp3.write("\x7E\x03\x11\x04\xEF");   // No loop
   attiny_sleep();                      // Sleep 500ms
 
+  address=&eeprom;
   // Randomize number generator
-  address=eeprom_read_word(0);         // Read EEPROM address
-  if ((address<2) || (address>(EEPROM.length()-3))) {
+  *address=eeprom_read_word(0);         // Read EEPROM address
+  if ((*address<2) || (*address>(EEPROM.length()-3))) {
   // Initialize EEPROM and size for first use or after end of cycle
-    address = 2;                       // Starting address
-    eeprom_write_word(0,address);      // Write starting address
+    *address=2 ;                       // Starting address
+    eeprom_write_word(0,*address);      // Write starting address
     eeprom_write_word(address,0);      // Write seed 0
   }
-  seed=eeprom_read_word(address);      // Read seed
+  seed=eeprom_read_word(address);     // Read seed
   if (seed>900) {                      // After 900 write-cyles move to another address                                   
     seed=0;                            // to keep the EEPROM alive
-    address+=2;
-    eeprom_write_word(0,address);
+    *address+=2;
+    eeprom_write_word(0,*address);
   }
   randomSeed(seed);                    // Randomize
   seed++;                              // New seed
@@ -161,21 +162,6 @@ while(1)
   }
   attiny_sleep();                      // Safe battery
   
-  // Optional: Check current
-  #ifdef Batterywarning
-    if (counter==0) {               
-     current=MeasureVCC();
-     vref=1024*1.1f/(double)current;
-     if (vref<=minCurrent) {           // Current below minimum
-       if (vref<=battLow) low=true;    // Power too low for JQ6500
-       else JQ6500_play(Time_event+1); // Nokolino says "Beep"
-     }
-     else low=false;
-     counter=400;                      // Every minute, 50x 128ms + some sleeping ms
-    }
-    counter--;
-  #endif
-
   // Optional: Check darkness
   #ifdef Lightsensor
     if (analogRead(A3)<=Darkness) dark=true;
@@ -193,7 +179,7 @@ void JQ6500_play(uint8_t f) {          // Plays MP3 number f
   mp3.write(f);
   mp3.write("\xEF");
   attiny_sleep();
-  while (analogRead(A2)>maxInput) attiny_sleep(); // Check busy
+  while (analogRead(2)>maxInput) attiny_sleep(); // Check busy
   mp3.write("\x7E\x02\x0A\xEF");       // Go back to sleep, JQ6500!
   attiny_sleep();
 }
@@ -214,17 +200,6 @@ void setup_watchdog(uint8_t mode) {    // Setup wake time
   WDTCR |= (1<<WDCE) | (1<<WDE);
   WDTCR = bb;
   WDTCR |= _BV(WDIE);
-}
-
-uint16_t MeasureVCC(void) {            // Thank you, Tim!
-  PRR    &=~_BV(PRADC); 
-  ADCSRA  =_BV(ADEN)|_BV(ADPS2)|_BV(ADPS1)|_BV(ADPS0); 
-  ADMUX   =_BV(REFS2) | 0x0c; 
-  _delay_ms(1);  
-  ADCSRA  |=_BV(ADSC);
-  while (!(ADCSRA&_BV(ADIF))); 
-  ADCSRA  |=_BV(ADIF);
-  return ADC;
 }
 
 ISR(WDT_vect) {                       // Set global flag
